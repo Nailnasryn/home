@@ -158,7 +158,7 @@
         <!-- Login/Register Screen -->
         <div id="auth-screen" class="min-h-full flex items-center justify-center p-6">
             <div class="w-full max-w-md space-y-6">
-                <!-- Logo -->
+                   <!-- Logo -->
                 <div class="text-center mb-8">
                     <div class="w-20 h-20 mx-auto rounded-full gradient-btn flex items-center justify-center text-white text-3xl mb-4">💅</div>
                     <h1 class="text-2xl font-bold text-gray-800">Nasryn NailArt</h1>
@@ -236,7 +236,7 @@
                 </div>
             </header>
 
-            <!-- Customer Navigation -->
+             <!-- Customer Navigation -->
             <nav class="hidden md:block mb-6">
                 <div class="flex justify-center gap-2 px-6">
                     <button onclick="showCustomerSection('profile')" class="nav-btn active px-6 py-3 rounded-2xl font-medium" id="customer-nav-profile">
@@ -247,24 +247,6 @@
                     </button>
                     <button onclick="showCustomerSection('campaigns')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="customer-nav-campaigns">
                         🎯 کمپین‌ها
-                    </button>
-                </div>
-            </nav>
-
-            <!-- Customer Mobile Navigation -->
-            <nav class="mobile-nav md:hidden">
-                <div class="flex justify-around py-2">
-                    <button onclick="showCustomerSection('profile')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-profile">
-                        <div class="text-lg">👤</div>
-                        <div class="text-xs">پروفایل</div>
-                    </button>
-                    <button onclick="showCustomerSection('appointments')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-appointments">
-                        <div class="text-lg">📅</div>
-                        <div class="text-xs">نوبت‌ها</div>
-                    </button>
-                    <button onclick="showCustomerSection('campaigns')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-campaigns">
-                        <div class="text-lg">🎯</div>
-                        <div class="text-xs">کمپین‌ها</div>
                     </button>
                 </div>
             </nav>
@@ -302,7 +284,7 @@
                         </div>
                     </div>
 
-                    <!-- Social Media -->
+                      <!-- Social Media -->
                     <div class="glass-card rounded-2xl p-6 mb-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                             📱 شبکه‌های اجتماعی
@@ -357,7 +339,7 @@
                         </div>
                     </div>
 
-                    <!-- Recent Appointments -->
+                   <!-- Recent Appointments -->
                     <div class="glass-card rounded-2xl p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                             📅 آخرین نوبت‌ها
@@ -385,7 +367,6 @@
                         </div>
                     </div>
                 </section>
-
 
 
                 <!-- Customer Campaigns Section -->
@@ -727,7 +708,7 @@
                             <div class="space-y-4">
                                 <input type="text" id="admin-campaign-name" placeholder="نام کمپین..." class="input-field w-full">
                                 <input type="number" id="admin-campaign-discount" placeholder="درصد تخفیف..." class="input-field w-full">
-                                <input type="date" id="admin-campaign-expiry" class="input-field w-full">
+                                <input type="text" id="admin-campaign-expiry" placeholder="تاریخ انقضا (مثال: 1403/10/15)" class="input-field w-full" maxlength="10" oninput="formatPersianDate(this)">
                                 <textarea id="admin-campaign-description" placeholder="توضیحات کمپین..." class="input-field w-full h-24 resize-none"></textarea>
                                 <button onclick="createAdminCampaign()" class="gradient-btn text-white px-6 py-3 rounded-xl w-full">
                                     🚀 ایجاد کمپین
@@ -813,7 +794,7 @@
                             <input type="time" id="book-appointment-time" class="input-field">
                         </div>
                     </div>
-                    <select id="book-appointment-service" class="input-field w-full">
+                   <select id="book-appointment-service" class="input-field w-full">
                         <option value="manicure">مانیکور - 250,000 تومان</option>
                         <option value="laminate">استحکام سازی ناخن طبیعی (لمینت) - 450,000 تومان</option>
                         <option value="initial-extension">کاشت اولیه - 600,000 تومان</option>
@@ -867,7 +848,7 @@
                     <select id="service-customer-select" class="input-field w-full">
                         <option value="">انتخاب مشتری...</option>
                     </select>
-                    <select id="service-type-select" class="input-field w-full" onchange="toggleCustomServiceType()">
+                   <select id="service-type-select" class="input-field w-full" onchange="toggleCustomServiceType()">
                         <option value="manicure">مانیکور</option>
                         <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
                         <option value="initial-extension">کاشت اولیه</option>
@@ -942,7 +923,7 @@
                     <div class="glass-card rounded-xl p-6">
                         <h4 class="font-bold text-gray-800 mb-4">ثبت خدمت جدید</h4>
                         <div class="space-y-4">
-                            <select id="modal-service-type" class="input-field w-full" onchange="toggleModalCustomServiceType()">
+                           <select id="modal-service-type" class="input-field w-full" onchange="toggleModalCustomServiceType()">
                                 <option value="manicure">مانیکور</option>
                                 <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
                                 <option value="initial-extension">کاشت اولیه</option>
@@ -973,6 +954,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Cancel Appointment Modal -->
+        <div id="cancel-appointment-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="modal-content rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    ❌ لغو نوبت
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">دلیل لغو:</label>
+                        <textarea id="cancel-reason" placeholder="دلیل لغو نوبت را بنویسید..." class="input-field w-full h-24 resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">پیشنهاد ساعت خالی (اختیاری):</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="suggested-date" placeholder="1403/09/20" class="input-field" maxlength="10" oninput="formatPersianDate(this)">
+                            <input type="time" id="suggested-time" class="input-field">
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="confirmCancelAppointment()" class="bg-red-400 text-white px-6 py-3 rounded-xl flex-1">
+                            ❌ لغو نوبت
+                        </button>
+                        <button onclick="closeModal('cancel-appointment-modal')" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl flex-1">
+                            انصراف
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -985,7 +996,7 @@
         let currentUser = null;
         let userType = null; // 'customer' or 'admin'
 
-        // Service prices
+// Service prices
         const servicePrices = {
             'manicure': 250000,
             'laminate': 500000,
@@ -1266,6 +1277,14 @@
                 const displayDate = appointment.persianDate || new Date(appointment.datetime).toLocaleDateString('fa-IR');
                 const displayTime = appointment.persianTime || new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
                 
+                // Calculate total price including additional services
+                let totalPrice = servicePrices[appointment.service] || 0;
+                if (appointment.additionalServices && appointment.additionalServices.length > 0) {
+                    appointment.additionalServices.forEach(service => {
+                        totalPrice += additionalServicePrices[service] || 0;
+                    });
+                }
+                
                 return `
                     <div class="customer-card rounded-xl p-6">
                         <div class="flex items-center justify-between mb-4">
@@ -1282,9 +1301,15 @@
                         </div>
                         
                         <div class="space-y-2 mb-4">
+                            ${appointment.additionalServices && appointment.additionalServices.length > 0 ? `
+                                <div class="flex justify-between text-sm">
+                                    <span>خدمات اضافی:</span>
+                                    <span class="font-medium">${appointment.additionalServices.map(s => getAdditionalServiceName(s)).join(', ')}</span>
+                                </div>
+                            ` : ''}
                             <div class="flex justify-between text-sm">
-                                <span>قیمت:</span>
-                                <span class="font-medium">${servicePrices[appointment.service].toLocaleString()} تومان</span>
+                                <span>قیمت کل:</span>
+                                <span class="font-medium">${totalPrice.toLocaleString()} تومان</span>
                             </div>
                             ${appointment.notes ? `
                                 <div class="bg-white bg-opacity-30 rounded-lg p-3">
@@ -1292,6 +1317,15 @@
                                 </div>
                             ` : ''}
                         </div>
+                        
+                        ${appointment.cancelReason ? `
+                            <div class="bg-red-100 border border-red-300 rounded-lg p-3 mb-4">
+                                <div class="text-sm text-red-700"><strong>دلیل لغو:</strong> ${appointment.cancelReason}</div>
+                                ${appointment.suggestedDate && appointment.suggestedTime ? `
+                                    <div class="text-sm text-blue-700 mt-2"><strong>ساعت پیشنهادی:</strong> ${appointment.suggestedDate} - ${appointment.suggestedTime}</div>
+                                ` : ''}
+                            </div>
+                        ` : ''}
                         
                         ${appointment.status === 'pending' ? `
                             <button onclick="cancelCustomerAppointment('${appointment.id}')" class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-sm w-full transition-all">
@@ -1314,25 +1348,29 @@
                 return;
             }
             
-            container.innerHTML = activeCampaigns.map(campaign => `
-                <div class="customer-card rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h4 class="font-bold text-gray-800">${campaign.name}</h4>
-                            <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+            container.innerHTML = activeCampaigns.map(campaign => {
+                const displayDate = campaign.persianExpiry || new Date(campaign.expiry).toLocaleDateString('fa-IR');
+                
+                return `
+                    <div class="customer-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${campaign.name}</h4>
+                                <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+                            </div>
+                            <div class="badge">${displayDate}</div>
                         </div>
-                        <div class="badge">${new Date(campaign.expiry).toLocaleDateString('fa-IR')}</div>
+                        
+                        ${campaign.description ? `
+                            <p class="text-gray-700 mb-4">${campaign.description}</p>
+                        ` : ''}
+                        
+                        <button onclick="useCampaign('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-xl text-sm w-full">
+                            🎁 استفاده از کمپین
+                        </button>
                     </div>
-                    
-                    ${campaign.description ? `
-                        <p class="text-gray-700 mb-4">${campaign.description}</p>
-                    ` : ''}
-                    
-                    <button onclick="useCampaign('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-xl text-sm w-full">
-                        🎁 استفاده از کمپین
-                    </button>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function loadCustomerServiceHistory() {
@@ -1613,8 +1651,16 @@
             
             container.innerHTML = sortedAppointments.map(appointment => {
                 const customer = customers.find(c => c.id === appointment.customerId);
-                const date = new Date(appointment.datetime).toLocaleDateString('fa-IR');
-                const time = new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                const displayDate = appointment.persianDate || new Date(appointment.datetime).toLocaleDateString('fa-IR');
+                const displayTime = appointment.persianTime || new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                
+                // Calculate total price including additional services
+                let totalPrice = servicePrices[appointment.service] || 0;
+                if (appointment.additionalServices && appointment.additionalServices.length > 0) {
+                    appointment.additionalServices.forEach(service => {
+                        totalPrice += additionalServicePrices[service] || 0;
+                    });
+                }
                 
                 return `
                     <div class="customer-card rounded-xl p-6">
@@ -1636,6 +1682,12 @@
                                 <span>خدمت:</span>
                                 <span class="font-medium">${getServiceName(appointment.service)}</span>
                             </div>
+                            ${appointment.additionalServices && appointment.additionalServices.length > 0 ? `
+                                <div class="flex justify-between text-sm">
+                                    <span>خدمات اضافی:</span>
+                                    <span class="font-medium">${appointment.additionalServices.map(s => getAdditionalServiceName(s)).join(', ')}</span>
+                                </div>
+                            ` : ''}
                             <div class="flex justify-between text-sm">
                                 <span>تاریخ:</span>
                                 <span class="font-medium">${displayDate}</span>
@@ -1645,8 +1697,8 @@
                                 <span class="font-medium">${displayTime}</span>
                             </div>
                             <div class="flex justify-between text-sm">
-                                <span>قیمت:</span>
-                                <span class="font-medium">${servicePrices[appointment.service].toLocaleString()} تومان</span>
+                                <span>قیمت کل:</span>
+                                <span class="font-medium">${totalPrice.toLocaleString()} تومان</span>
                             </div>
                         </div>
                         
@@ -1656,19 +1708,25 @@
                             </div>
                         ` : ''}
                         
+                        ${appointment.cancelReason ? `
+                            <div class="bg-red-100 border border-red-300 rounded-lg p-3 mb-4">
+                                <div class="text-sm text-red-700"><strong>دلیل لغو:</strong> ${appointment.cancelReason}</div>
+                            </div>
+                        ` : ''}
+                        
                         <div class="flex gap-2">
                             ${appointment.status === 'pending' ? `
                                 <button onclick="confirmAdminAppointment('${appointment.id}')" class="gradient-btn text-white px-3 py-2 rounded-lg text-sm flex-1">
                                     ✅ تایید
                                 </button>
-                                <button onclick="cancelAdminAppointment('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                <button onclick="showCancelAppointmentModal('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
                                     ❌ لغو
                                 </button>
                             ` : appointment.status === 'confirmed' ? `
                                 <button onclick="completeAdminAppointment('${appointment.id}')" class="gradient-btn text-white px-3 py-2 rounded-lg text-sm flex-1">
                                     ✅ تکمیل
                                 </button>
-                                <button onclick="cancelAdminAppointment('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                <button onclick="showCancelAppointmentModal('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
                                     ❌ لغو
                                 </button>
                             ` : `
@@ -1683,12 +1741,21 @@
         }
 
         // Admin appointment management
+        let selectedAppointmentId = null;
+
         function confirmAdminAppointment(appointmentId) {
             const appointment = appointments.find(a => a.id === appointmentId);
             if (appointment) {
                 appointment.status = 'confirmed';
                 localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
                 loadAdminAppointments();
+                
+                // Refresh customer data if they're logged in
+                if (currentUser && currentUser.id === appointment.customerId) {
+                    loadCustomerAppointments();
+                    loadCustomerRecentAppointments();
+                }
+                
                 showNotification('نوبت تایید شد! ✅', 'success');
             }
         }
@@ -1708,18 +1775,64 @@
                 localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
                 loadAdminAppointments();
                 updateAdminStats();
+                
+                // Refresh customer data if they're logged in
+                if (currentUser && currentUser.id === appointment.customerId) {
+                    loadCustomerAppointments();
+                    loadCustomerRecentAppointments();
+                    loadCustomerData();
+                }
+                
                 showNotification('نوبت تکمیل شد! 🎉', 'success');
             }
         }
 
-        function cancelAdminAppointment(appointmentId) {
-            const appointment = appointments.find(a => a.id === appointmentId);
-            if (appointment && confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟')) {
-                appointment.status = 'cancelled';
-                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
-                loadAdminAppointments();
-                showNotification('نوبت لغو شد', 'success');
+        function showCancelAppointmentModal(appointmentId) {
+            selectedAppointmentId = appointmentId;
+            document.getElementById('cancel-reason').value = '';
+            document.getElementById('suggested-date').value = '';
+            document.getElementById('suggested-time').value = '';
+            document.getElementById('cancel-appointment-modal').classList.remove('hidden');
+            document.getElementById('cancel-appointment-modal').classList.add('flex');
+        }
+
+        function confirmCancelAppointment() {
+            if (!selectedAppointmentId) return;
+            
+            const cancelReason = document.getElementById('cancel-reason').value.trim();
+            const suggestedDate = document.getElementById('suggested-date').value;
+            const suggestedTime = document.getElementById('suggested-time').value;
+            
+            if (!cancelReason) {
+                showNotification('لطفاً دلیل لغو را وارد کنید', 'error');
+                return;
             }
+            
+            const appointment = appointments.find(a => a.id === selectedAppointmentId);
+            if (appointment) {
+                appointment.status = 'cancelled';
+                appointment.cancelReason = cancelReason;
+                
+                if (suggestedDate && suggestedTime) {
+                    appointment.suggestedDate = suggestedDate;
+                    appointment.suggestedTime = suggestedTime;
+                }
+                
+                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                
+                closeModal('cancel-appointment-modal');
+                loadAdminAppointments();
+                
+                // Refresh customer data if they're logged in
+                if (currentUser && currentUser.id === appointment.customerId) {
+                    loadCustomerAppointments();
+                    loadCustomerRecentAppointments();
+                }
+                
+                showNotification('نوبت لغو شد و پیام برای مشتری ارسال شد 📤', 'success');
+            }
+            
+            selectedAppointmentId = null;
         }
 
         function deleteAdminAppointment(appointmentId) {
@@ -1728,6 +1841,13 @@
                 localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
                 loadAdminAppointments();
                 updateAdminStats();
+                
+                // Refresh customer data if they're logged in
+                if (currentUser) {
+                    loadCustomerAppointments();
+                    loadCustomerRecentAppointments();
+                }
+                
                 showNotification('نوبت حذف شد', 'success');
             }
         }
@@ -2172,19 +2292,29 @@
         function createAdminCampaign() {
             const name = document.getElementById('admin-campaign-name').value.trim();
             const discount = document.getElementById('admin-campaign-discount').value;
-            const expiry = document.getElementById('admin-campaign-expiry').value;
+            const persianExpiry = document.getElementById('admin-campaign-expiry').value;
             const description = document.getElementById('admin-campaign-description').value.trim();
             
-            if (!name || !discount || !expiry) {
+            if (!name || !discount || !persianExpiry) {
                 showNotification('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
                 return;
             }
+            
+            // Validate Persian date format
+            if (!/^\d{4}\/\d{2}\/\d{2}$/.test(persianExpiry)) {
+                showNotification('لطفاً تاریخ را به فرمت صحیح وارد کنید (مثال: 1403/10/15)', 'error');
+                return;
+            }
+            
+            // Convert Persian date to Gregorian for storage
+            const gregorianExpiry = convertPersianToGregorian(persianExpiry, '23:59');
             
             const campaign = {
                 id: Date.now().toString(),
                 name,
                 discount: parseInt(discount),
-                expiry,
+                expiry: gregorianExpiry.toISOString(),
+                persianExpiry: persianExpiry,
                 description,
                 createdAt: new Date().toISOString(),
                 active: true
@@ -2212,30 +2342,34 @@
                 return;
             }
             
-            container.innerHTML = activeCampaigns.map(campaign => `
-                <div class="customer-card rounded-xl p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h4 class="font-bold text-gray-800">${campaign.name}</h4>
-                            <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+            container.innerHTML = activeCampaigns.map(campaign => {
+                const displayDate = campaign.persianExpiry || new Date(campaign.expiry).toLocaleDateString('fa-IR');
+                
+                return `
+                    <div class="customer-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${campaign.name}</h4>
+                                <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+                            </div>
+                            <div class="badge">${displayDate}</div>
                         </div>
-                        <div class="badge">${new Date(campaign.expiry).toLocaleDateString('fa-IR')}</div>
+                        
+                        ${campaign.description ? `
+                            <p class="text-gray-700 mb-4">${campaign.description}</p>
+                        ` : ''}
+                        
+                        <div class="flex gap-2">
+                            <button onclick="sendAdminCampaignMessage('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-lg text-sm flex-1">
+                                📤 ارسال به همه
+                            </button>
+                            <button onclick="deactivateAdminCampaign('${campaign.id}')" class="bg-red-400 text-white px-4 py-2 rounded-lg text-sm">
+                                ❌ غیرفعال
+                            </button>
+                        </div>
                     </div>
-                    
-                    ${campaign.description ? `
-                        <p class="text-gray-700 mb-4">${campaign.description}</p>
-                    ` : ''}
-                    
-                    <div class="flex gap-2">
-                        <button onclick="sendAdminCampaignMessage('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-lg text-sm flex-1">
-                            📤 ارسال به همه
-                        </button>
-                        <button onclick="deactivateAdminCampaign('${campaign.id}')" class="bg-red-400 text-white px-4 py-2 rounded-lg text-sm">
-                            ❌ غیرفعال
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function sendAdminCampaignMessage(campaignId) {
@@ -2527,10 +2661,20 @@
                 'initial-extension': 'کاشت اولیه',
                 'repair': 'ترمیم',
                 'colleague-repair': 'ترمیم همکار',
-                'gel-polish': 'ژل پلیش دست',
+                'gel-polish': 'ژل پولیش دست',
                 'shape-fix': 'اصلاح فرم و ناخن شکسته'
             };
             return serviceNames[service] || service;
+        }
+
+        function getAdditionalServiceName(service) {
+            const additionalServiceNames = {
+                'french': 'فرنچ',
+                'ombre': 'آمبره',
+                'galaxy-gel': 'لاک ژل کهکشانی',
+                'lens-chrome': 'دیزاین لنز و کروم'
+            };
+            return additionalServiceNames[service] || service;
         }
 
         function closeModal(modalId) {
@@ -2628,5 +2772,6 @@
             `).join('');
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f1658146fddcc2',t:'MTc2MDU1MzExOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f29209948cc21b',t:'MTc2MDU2NTQyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
