@@ -158,10 +158,10 @@
         <!-- Login/Register Screen -->
         <div id="auth-screen" class="min-h-full flex items-center justify-center p-6">
             <div class="w-full max-w-md space-y-6">
-                   <!-- Logo -->
+                <!-- Logo -->
                 <div class="text-center mb-8">
                     <div class="w-20 h-20 mx-auto rounded-full gradient-btn flex items-center justify-center text-white text-3xl mb-4">💅</div>
-                    <h1 class="text-2xl font-bold text-gray-800">Nasryn NailArt</h1>
+                   <h1 class="text-2xl font-bold text-gray-800">Nasryn NailArt</h1>
                     <p class="text-gray-600 mt-2">با عشق برای زیبایی شما 🌸</p>
                 </div>
 
@@ -236,7 +236,7 @@
                 </div>
             </header>
 
-             <!-- Customer Navigation -->
+            <!-- Customer Navigation -->
             <nav class="hidden md:block mb-6">
                 <div class="flex justify-center gap-2 px-6">
                     <button onclick="showCustomerSection('profile')" class="nav-btn active px-6 py-3 rounded-2xl font-medium" id="customer-nav-profile">
@@ -247,6 +247,24 @@
                     </button>
                     <button onclick="showCustomerSection('campaigns')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="customer-nav-campaigns">
                         🎯 کمپین‌ها
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Customer Mobile Navigation -->
+            <nav class="mobile-nav md:hidden">
+                <div class="flex justify-around py-2">
+                    <button onclick="showCustomerSection('profile')" class="nav-btn active p-3 rounded-xl" id="customer-mobile-nav-profile">
+                        <div class="text-lg">👤</div>
+                        <div class="text-xs">پروفایل</div>
+                    </button>
+                    <button onclick="showCustomerSection('appointments')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-appointments">
+                        <div class="text-lg">📅</div>
+                        <div class="text-xs">نوبت‌ها</div>
+                    </button>
+                    <button onclick="showCustomerSection('campaigns')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-campaigns">
+                        <div class="text-lg">🎯</div>
+                        <div class="text-xs">کمپین‌ها</div>
                     </button>
                 </div>
             </nav>
@@ -284,7 +302,7 @@
                         </div>
                     </div>
 
-                      <!-- Social Media -->
+                     <!-- Social Media -->
                     <div class="glass-card rounded-2xl p-6 mb-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                             📱 شبکه‌های اجتماعی
@@ -309,6 +327,32 @@
                                     <div class="text-sm text-gray-600">09395975018</div>
                                 </div>
                             </a>
+                        </div>
+                    </div>
+
+                    <!-- Cashback Program -->
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            💰 برنامه بازگشت وجه
+                        </h2>
+                        <div class="bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl p-6">
+                            <div class="text-3xl mb-4 text-center">💰✨</div>
+                            <div class="text-lg font-bold text-gray-800 mb-4 text-center">بازگشت وجه هوشمند</div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="bg-white bg-opacity-50 rounded-lg p-3 text-center">
+                                    <div class="font-bold text-gray-800">درصد فعلی شما</div>
+                                    <div class="text-2xl font-bold text-green-600" id="customer-cashback-rate">5%</div>
+                                </div>
+                                <div class="bg-white bg-opacity-50 rounded-lg p-3 text-center">
+                                    <div class="font-bold text-gray-800">کل بازگشت دریافتی</div>
+                                    <div class="text-2xl font-bold text-green-600" id="customer-total-cashback">0 تومان</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-700 space-y-1">
+                                <div>🎯 جلسه ۳: +3% اضافی</div>
+                                <div>🌟 جلسه ۵: +5% اضافی</div>
+                                <div>👑 جلسه ۱۰: +10% اضافی (VIP)</div>
+                            </div>
                         </div>
                     </div>
 
@@ -339,7 +383,7 @@
                         </div>
                     </div>
 
-                   <!-- Recent Appointments -->
+                    <!-- Recent Appointments -->
                     <div class="glass-card rounded-2xl p-6">
                         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                             📅 آخرین نوبت‌ها
@@ -367,6 +411,7 @@
                         </div>
                     </div>
                 </section>
+
 
 
                 <!-- Customer Campaigns Section -->
@@ -848,8 +893,8 @@
                     <select id="service-customer-select" class="input-field w-full">
                         <option value="">انتخاب مشتری...</option>
                     </select>
-                   <select id="service-type-select" class="input-field w-full" onchange="toggleCustomServiceType()">
-                        <option value="manicure">مانیکور</option>
+                    <select id="service-type-select" class="input-field w-full" onchange="toggleCustomServiceType()">
+                         <option value="manicure">مانیکور</option>
                         <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
                         <option value="initial-extension">کاشت اولیه</option>
                         <option value="repair">ترمیم</option>
@@ -923,7 +968,7 @@
                     <div class="glass-card rounded-xl p-6">
                         <h4 class="font-bold text-gray-800 mb-4">ثبت خدمت جدید</h4>
                         <div class="space-y-4">
-                           <select id="modal-service-type" class="input-field w-full" onchange="toggleModalCustomServiceType()">
+                            <select id="modal-service-type" class="input-field w-full" onchange="toggleModalCustomServiceType()">
                                 <option value="manicure">مانیکور</option>
                                 <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
                                 <option value="initial-extension">کاشت اولیه</option>
@@ -996,7 +1041,7 @@
         let currentUser = null;
         let userType = null; // 'customer' or 'admin'
 
-// Service prices
+       // Service prices
         const servicePrices = {
             'manicure': 250000,
             'laminate': 500000,
@@ -1218,8 +1263,40 @@
                 </div>
             `;
             
+            // Update cashback info
+            updateCustomerCashbackInfo();
+            
             // Load recent appointments
             loadCustomerRecentAppointments();
+        }
+
+        function updateCustomerCashbackInfo() {
+            if (!currentUser) return;
+            
+            // Calculate current cashback rate
+            const baseCashback = parseInt(localStorage.getItem('base-cashback') || '5');
+            const visit3Bonus = parseInt(localStorage.getItem('visit3-bonus') || '3');
+            const visit5Bonus = parseInt(localStorage.getItem('visit5-bonus') || '5');
+            const visit10Bonus = parseInt(localStorage.getItem('visit10-bonus') || '10');
+            
+            let totalCashbackPercent = baseCashback;
+            const visits = currentUser.visits || 0;
+            
+            if (visits >= 10) {
+                totalCashbackPercent += visit10Bonus;
+            } else if (visits >= 5) {
+                totalCashbackPercent += visit5Bonus;
+            } else if (visits >= 3) {
+                totalCashbackPercent += visit3Bonus;
+            }
+            
+            // Calculate total cashback received
+            const customerServices = serviceRecords.filter(s => s.customerId === currentUser.id);
+            const totalCashback = customerServices.reduce((total, service) => total + (service.cashback || 0), 0);
+            
+            // Update display
+            document.getElementById('customer-cashback-rate').textContent = totalCashbackPercent + '%';
+            document.getElementById('customer-total-cashback').textContent = totalCashback.toLocaleString() + ' تومان';
         }
 
         function loadCustomerRecentAppointments() {
@@ -1392,11 +1469,17 @@
                 
                 return `
                     <div class="customer-card rounded-xl p-4">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="text-2xl">💅</div>
-                            <div>
-                                <div class="font-medium">${service.serviceType === 'other' ? service.customServiceType : getServiceName(service.serviceType)}</div>
-                                <div class="text-sm text-gray-600">${date}</div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="text-2xl">💅</div>
+                                <div>
+                                    <div class="font-medium">${service.serviceType === 'other' ? service.customServiceType : getServiceName(service.serviceType)}</div>
+                                    <div class="text-sm text-gray-600">${date}</div>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold text-gray-800">${service.price.toLocaleString()} تومان</div>
+                                ${service.cashback ? `<div class="text-sm text-green-600">+${service.cashback.toLocaleString()} بازگشت</div>` : ''}
                             </div>
                         </div>
                         
@@ -1485,11 +1568,11 @@
 
         function shareReferralCode() {
             const referralCode = `REFER${currentUser.id}`;
-            const message = `سلام! من از خدمات سالن زیبایی گل نرگس بسیار راضی هستم. با کد معرفی ${referralCode} ثبت‌نام کن تا هر دوی ما تخفیف بگیریم! 🌸💅`;
+            const message = `سلام! من از خدمات سالن بسیار راضی هستم. با کد معرفی ${referralCode} ثبت‌نام کن تا هر دوی ما تخفیف بگیریم! 🌸💅`;
             
             if (navigator.share) {
                 navigator.share({
-                    title: 'کد معرفی سالن زیبایی',
+                    title: 'کد معرفی سالن ',
                     text: message
                 });
             } else {
@@ -1924,7 +2007,10 @@
                     <div class="bg-white bg-opacity-30 rounded-lg p-3">
                         <div class="flex justify-between items-center mb-2">
                             <span class="font-medium">${serviceName}</span>
-                            <span class="font-bold">${service.price.toLocaleString()} تومان</span>
+                            <div class="text-left">
+                                <div class="font-bold">${service.price.toLocaleString()} تومان</div>
+                                ${service.cashback ? `<div class="text-sm text-green-600">+${service.cashback.toLocaleString()} بازگشت</div>` : ''}
+                            </div>
                         </div>
                         <div class="text-sm text-gray-600 mb-2">${date}</div>
                         ${service.description ? `<div class="text-sm text-gray-700">${service.description}</div>` : ''}
@@ -2005,12 +2091,16 @@
                 return;
             }
             
+            const servicePrice = parseInt(price);
+            const cashback = calculateCashback(selectedCustomerId, servicePrice);
+            
             const serviceRecord = {
                 id: Date.now().toString(),
                 customerId: selectedCustomerId,
                 serviceType,
                 customServiceType: serviceType === 'other' ? customServiceType : '',
-                price: parseInt(price),
+                price: servicePrice,
+                cashback: cashback,
                 description,
                 date: new Date().toISOString(),
                 createdAt: new Date().toISOString()
@@ -2019,10 +2109,11 @@
             serviceRecords.push(serviceRecord);
             localStorage.setItem('nail-salon-service-records', JSON.stringify(serviceRecords));
             
-            // Update customer stats
+            // Update customer stats and add cashback
             const customer = customers.find(c => c.id === selectedCustomerId);
             if (customer) {
                 customer.visits = (customer.visits || 0) + 1;
+                customer.balance = (customer.balance || 0) + cashback;
                 localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
             }
             
@@ -2035,7 +2126,7 @@
             loadAdminCustomers();
             updateAdminStats();
             
-            showNotification('خدمت با موفقیت ثبت شد! 📋', 'success');
+            showNotification(`خدمت ثبت شد! ${cashback.toLocaleString()} تومان بازگشت وجه اضافه شد! 💰`, 'success');
         }
 
         function addModalServiceFromBalance() {
@@ -2176,6 +2267,7 @@
                             </div>
                             <div class="text-left">
                                 <div class="font-bold text-gray-800">${service.price.toLocaleString()} تومان</div>
+                                ${service.cashback ? `<div class="text-sm text-green-600">+${service.cashback.toLocaleString()} بازگشت</div>` : ''}
                                 <div class="text-sm text-gray-600">${date}</div>
                             </div>
                         </div>
@@ -2268,25 +2360,60 @@
             `).join('');
         }
 
-        // Loyalty functions
+        // Cashback functions
         function loadAdminLoyalty() {
-            const loyaltyPercentage = localStorage.getItem('loyalty-percentage') || '5';
+            const baseCashback = localStorage.getItem('base-cashback') || '5';
+            const visit3Bonus = localStorage.getItem('visit3-bonus') || '3';
+            const visit5Bonus = localStorage.getItem('visit5-bonus') || '5';
+            const visit10Bonus = localStorage.getItem('visit10-bonus') || '10';
             const referralCount = localStorage.getItem('referral-count') || '3';
             
-            document.getElementById('admin-loyalty-percentage').value = loyaltyPercentage;
+            document.getElementById('admin-base-cashback').value = baseCashback;
+            document.getElementById('admin-visit3-bonus').value = visit3Bonus;
+            document.getElementById('admin-visit5-bonus').value = visit5Bonus;
+            document.getElementById('admin-visit10-bonus').value = visit10Bonus;
             document.getElementById('admin-referral-count').value = referralCount;
             
             loadAdminActiveCampaigns();
         }
 
-        function saveAdminLoyaltySettings() {
-            const loyaltyPercentage = document.getElementById('admin-loyalty-percentage').value;
+        function saveCashbackSettings() {
+            const baseCashback = document.getElementById('admin-base-cashback').value;
+            const visit3Bonus = document.getElementById('admin-visit3-bonus').value;
+            const visit5Bonus = document.getElementById('admin-visit5-bonus').value;
+            const visit10Bonus = document.getElementById('admin-visit10-bonus').value;
             const referralCount = document.getElementById('admin-referral-count').value;
             
-            localStorage.setItem('loyalty-percentage', loyaltyPercentage);
+            localStorage.setItem('base-cashback', baseCashback);
+            localStorage.setItem('visit3-bonus', visit3Bonus);
+            localStorage.setItem('visit5-bonus', visit5Bonus);
+            localStorage.setItem('visit10-bonus', visit10Bonus);
             localStorage.setItem('referral-count', referralCount);
             
-            showNotification('تنظیمات وفاداری ذخیره شد! 💾', 'success');
+            showNotification('تنظیمات بازگشت وجه ذخیره شد! 💰', 'success');
+        }
+
+        function calculateCashback(customerId, amount) {
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return 0;
+            
+            const baseCashback = parseInt(localStorage.getItem('base-cashback') || '5');
+            const visit3Bonus = parseInt(localStorage.getItem('visit3-bonus') || '3');
+            const visit5Bonus = parseInt(localStorage.getItem('visit5-bonus') || '5');
+            const visit10Bonus = parseInt(localStorage.getItem('visit10-bonus') || '10');
+            
+            let totalCashbackPercent = baseCashback;
+            const visits = customer.visits || 0;
+            
+            if (visits >= 10) {
+                totalCashbackPercent += visit10Bonus;
+            } else if (visits >= 5) {
+                totalCashbackPercent += visit5Bonus;
+            } else if (visits >= 3) {
+                totalCashbackPercent += visit3Bonus;
+            }
+            
+            return Math.floor((amount * totalCashbackPercent) / 100);
         }
 
         function createAdminCampaign() {
@@ -2585,12 +2712,16 @@
                 return;
             }
             
+            const servicePrice = parseInt(price);
+            const cashback = calculateCashback(customerId, servicePrice);
+            
             const serviceRecord = {
                 id: Date.now().toString(),
                 customerId,
                 serviceType,
                 customServiceType: serviceType === 'other' ? customServiceType : '',
-                price: parseInt(price),
+                price: servicePrice,
+                cashback: cashback,
                 description,
                 date: new Date().toISOString(),
                 createdAt: new Date().toISOString()
@@ -2599,10 +2730,11 @@
             serviceRecords.push(serviceRecord);
             localStorage.setItem('nail-salon-service-records', JSON.stringify(serviceRecords));
             
-            // Update customer stats
+            // Update customer stats and add cashback
             const customer = customers.find(c => c.id === customerId);
             if (customer) {
                 customer.visits = (customer.visits || 0) + 1;
+                customer.balance = (customer.balance || 0) + cashback;
                 localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
             }
             
@@ -2617,7 +2749,7 @@
             closeModal('add-service-modal');
             loadAdminServices();
             updateAdminStats();
-            showNotification('سابقه خدمت با موفقیت ثبت شد! 📋', 'success');
+            showNotification(`سابقه خدمت ثبت شد! ${cashback.toLocaleString()} تومان بازگشت وجه اضافه شد! 💰`, 'success');
         }
 
         // Utility functions
@@ -2772,6 +2904,5 @@
             `).join('');
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f29209948cc21b',t:'MTc2MDU2NTQyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f2d056868a9c0d',t:'MTc2MDU2Nzk4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
