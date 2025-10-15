@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💅 سیستم CRM سالن ناخن</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #f3e8ff 100%);
+            min-height: 100%;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+        
+        .gradient-btn {
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            transition: all 0.3s ease;
+        }
+        
+        .gradient-btn:hover {
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(244, 114, 182, 0.3);
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #f472b6, #c084fc);
+            color: white;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .customer-card {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .customer-card:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .badge.vip {
+            background: linear-gradient(135deg, #c084fc, #8b5cf6);
+        }
+        
+        .badge.loyal {
+            background: linear-gradient(135deg, #34d399, #10b981);
+        }
+        
+        .badge.new {
+            background: linear-gradient(135deg, #fb7185, #f43f5e);
+        }
+        
+        .input-field {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: #374151;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #f472b6;
+            box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.1);
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        .modal {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+        }
+        
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(25px);
+                border-top: 1px solid rgba(255, 255, 255, 0.4);
+                z-index: 50;
+            }
+            
+            .main-content {
+                padding-bottom: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="min-h-full">
+        <!-- Login/Register Screen -->
+        <div id="auth-screen" class="min-h-full flex items-center justify-center p-6">
+            <div class="w-full max-w-md space-y-6">
+                <!-- Logo -->
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 mx-auto rounded-full gradient-btn flex items-center justify-center text-white text-3xl mb-4">💅</div>
+                    <h1 class="text-2xl font-bold text-gray-800">Nasryn NailArt</h1>
+                    <p class="text-gray-600 mt-2">با عشق برای زیبایی شما 🌸</p>
+                </div>
+
+                <!-- Auth Tabs -->
+                <div class="flex bg-white bg-opacity-30 rounded-2xl p-1 mb-6">
+                    <button onclick="showAuthTab('customer-login')" class="auth-tab flex-1 py-3 px-4 rounded-xl font-medium transition-all" id="tab-customer-login">
+                        👤 ورود مشتری
+                    </button>
+                    <button onclick="showAuthTab('customer-register')" class="auth-tab flex-1 py-3 px-4 rounded-xl font-medium transition-all" id="tab-customer-register">
+                        📝 ثبت‌نام
+                    </button>
+                    <button onclick="showAuthTab('admin-login')" class="auth-tab flex-1 py-3 px-4 rounded-xl font-medium transition-all" id="tab-admin-login">
+                        ⚙️ ادمین
+                    </button>
+                </div>
+
+                <!-- Customer Login -->
+                <div id="customer-login-form" class="auth-form login-card rounded-2xl p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">ورود مشتری 👤</h3>
+                    <div class="space-y-4">
+                        <input type="tel" id="customer-login-phone" placeholder="شماره تماس" class="input-field w-full">
+                        <button onclick="customerLogin()" class="gradient-btn text-white px-6 py-4 rounded-2xl w-full font-medium">
+                            ورود 🌸
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Customer Register -->
+                <div id="customer-register-form" class="auth-form login-card rounded-2xl p-6 hidden">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">ثبت‌نام مشتری 📝</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="customer-register-name" placeholder="نام و نام خانوادگی" class="input-field w-full">
+                        <input type="tel" id="customer-register-phone" placeholder="شماره تماس" class="input-field w-full">
+                        <input type="text" id="customer-register-birthday" placeholder="تاریخ تولد (مثال: 1370/05/15)" class="input-field w-full" maxlength="10" oninput="formatPersianDate(this)">
+                        <button onclick="customerRegister()" class="gradient-btn text-white px-6 py-4 rounded-2xl w-full font-medium">
+                            ثبت‌نام 💖
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Login -->
+                <div id="admin-login-form" class="auth-form login-card rounded-2xl p-6 hidden">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">ورود ادمین ⚙️</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="admin-username" placeholder="نام کاربری" class="input-field w-full">
+                        <input type="password" id="admin-password" placeholder="رمز عبور" class="input-field w-full">
+                        <button onclick="adminLogin()" class="gradient-btn text-white px-6 py-4 rounded-2xl w-full font-medium">
+                            ورود 🔐
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- Customer Panel -->
+        <div id="customer-panel" class="hidden min-h-full">
+            <!-- Customer Header -->
+            <header class="glass-card rounded-b-3xl p-6 mb-6 sticky top-0 z-40">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl" id="customer-avatar">💅</div>
+                        <div>
+                            <h1 class="text-lg font-bold text-gray-800" id="customer-welcome">خوش آمدید</h1>
+                            <p class="text-sm text-gray-600">پنل مشتری 🌸</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium">
+                        خروج 🚪
+                    </button>
+                </div>
+            </header>
+
+            <!-- Customer Navigation -->
+            <nav class="hidden md:block mb-6">
+                <div class="flex justify-center gap-2 px-6">
+                    <button onclick="showCustomerSection('profile')" class="nav-btn active px-6 py-3 rounded-2xl font-medium" id="customer-nav-profile">
+                        👤 پروفایل
+                    </button>
+                    <button onclick="showCustomerSection('appointments')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="customer-nav-appointments">
+                        📅 نوبت‌ها
+                    </button>
+                    <button onclick="showCustomerSection('campaigns')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="customer-nav-campaigns">
+                        🎯 کمپین‌ها
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Customer Mobile Navigation -->
+            <nav class="mobile-nav md:hidden">
+                <div class="flex justify-around py-2">
+                    <button onclick="showCustomerSection('profile')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-profile">
+                        <div class="text-lg">👤</div>
+                        <div class="text-xs">پروفایل</div>
+                    </button>
+                    <button onclick="showCustomerSection('appointments')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-appointments">
+                        <div class="text-lg">📅</div>
+                        <div class="text-xs">نوبت‌ها</div>
+                    </button>
+                    <button onclick="showCustomerSection('campaigns')" class="nav-btn p-3 rounded-xl" id="customer-mobile-nav-campaigns">
+                        <div class="text-lg">🎯</div>
+                        <div class="text-xs">کمپین‌ها</div>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Customer Content -->
+            <main class="main-content px-6">
+                <!-- Customer Profile Section -->
+                <section id="customer-profile-section" class="customer-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- Profile Info -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                👤 اطلاعات شخصی
+                            </h2>
+                            <div id="customer-profile-info" class="space-y-4">
+                                <!-- Profile info will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                📊 آمار من
+                            </h2>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="stats-card rounded-xl p-4 text-center">
+                                    <div class="text-2xl font-bold text-gray-800" id="customer-visits">0</div>
+                                    <div class="text-sm text-gray-600">مراجعات</div>
+                                </div>
+                                <div class="stats-card rounded-xl p-4 text-center">
+                                    <div class="text-2xl font-bold text-gray-800" id="customer-balance">0</div>
+                                    <div class="text-sm text-gray-600">شارژ (تومان)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            📱 شبکه‌های اجتماعی
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <a href="https://instagram.com/nail.nasryn" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-4 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl hover:from-pink-200 hover:to-purple-200 transition-all">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white text-xl">
+                                    📷
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-800">اینستاگرام</div>
+                                    <div class="text-sm text-gray-600">@nail.nasryn</div>
+                                </div>
+                            </a>
+                            
+                            <a href="https://wa.me/09395975018" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl hover:from-green-200 hover:to-emerald-200 transition-all">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-white text-xl">
+                                    💬
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-800">واتس‌اپ</div>
+                                    <div class="text-sm text-gray-600">09395975018</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Referral Program -->
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            🎁 برنامه معرفی دوستان
+                        </h2>
+                        <div class="bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl p-6 text-center">
+                            <div class="text-3xl mb-4">👥💖</div>
+                            <div class="text-lg font-bold text-gray-800 mb-2">جایزه معرفی دوستان</div>
+                            <div class="text-gray-700 mb-4">
+                                با معرفی ۳ دوست به سالن، یک جلسه کامل رایگان دریافت کنید!
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                💡 کافیست دوستانتان هنگام ثبت‌نام، نام شما را به عنوان معرف ذکر کنند
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service History -->
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            📋 سابقه خدمات
+                        </h2>
+                        <div id="customer-service-history" class="space-y-4">
+                            <!-- Service history will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Appointments -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            📅 آخرین نوبت‌ها
+                        </h2>
+                        <div id="customer-recent-appointments" class="space-y-4">
+                            <!-- Recent appointments will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Customer Appointments Section -->
+                <section id="customer-appointments-section" class="customer-section hidden">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                📅 رزرو نوبت
+                            </h2>
+                            <button onclick="showBookAppointmentModal()" class="gradient-btn text-white px-4 py-2 rounded-xl">
+                                ➕ نوبت جدید
+                            </button>
+                        </div>
+                        
+                        <div id="customer-appointments-list" class="space-y-4">
+                            <!-- Customer appointments will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+
+
+                <!-- Customer Campaigns Section -->
+                <section id="customer-campaigns-section" class="customer-section hidden">
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            🎯 کمپین‌های فعال
+                        </h2>
+                        <div id="customer-active-campaigns" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Active campaigns will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Admin Panel (Previous admin panel code remains the same) -->
+        <div id="admin-panel" class="hidden min-h-full">
+            <!-- Admin Header -->
+            <header class="glass-card rounded-b-3xl p-6 mb-6 sticky top-0 z-40">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">⚙️</div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-800">پنل مدیریت سالن ناخن</h1>
+                            <p class="text-sm text-gray-600">با عشق برای زیبایی شما ساخته شده 🌸</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="exportData()" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium">
+                            📊 خروجی Excel
+                        </button>
+                        <button onclick="logout()" class="nav-btn px-4 py-2 rounded-xl text-sm font-medium">
+                            خروج 🚪
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Admin Navigation -->
+            <nav class="hidden md:block mb-6">
+                <div class="flex justify-center gap-2 px-6">
+                    <button onclick="showAdminSection('dashboard')" class="nav-btn active px-6 py-3 rounded-2xl font-medium" id="admin-nav-dashboard">
+                        🏠 داشبورد
+                    </button>
+                    <button onclick="showAdminSection('customers')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-customers">
+                        👥 مشتریان
+                    </button>
+                    <button onclick="showAdminSection('appointments')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-appointments">
+                        📅 نوبت‌ها
+                    </button>
+                    <button onclick="showAdminSection('services')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-services">
+                        📋 سابقه خدمات
+                    </button>
+                    <button onclick="showAdminSection('messages')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-messages">
+                        💌 پیام‌ها
+                    </button>
+                    <button onclick="showAdminSection('reports')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-reports">
+                        📈 گزارشات
+                    </button>
+                    <button onclick="showAdminSection('loyalty')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-loyalty">
+                        🎁 وفاداری
+                    </button>
+                    <button onclick="showAdminSection('settings')" class="nav-btn px-6 py-3 rounded-2xl font-medium" id="admin-nav-settings">
+                        ⚙️ تنظیمات
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Admin Mobile Navigation -->
+            <nav class="mobile-nav md:hidden">
+                <div class="flex justify-around py-2">
+                    <button onclick="showAdminSection('dashboard')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-dashboard">
+                        <div class="text-lg">🏠</div>
+                        <div class="text-xs">داشبورد</div>
+                    </button>
+                    <button onclick="showAdminSection('customers')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-customers">
+                        <div class="text-lg">👥</div>
+                        <div class="text-xs">مشتریان</div>
+                    </button>
+                    <button onclick="showAdminSection('appointments')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-appointments">
+                        <div class="text-lg">📅</div>
+                        <div class="text-xs">نوبت‌ها</div>
+                    </button>
+                    <button onclick="showAdminSection('services')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-services">
+                        <div class="text-lg">📋</div>
+                        <div class="text-xs">سابقه</div>
+                    </button>
+                    <button onclick="showAdminSection('messages')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-messages">
+                        <div class="text-lg">💌</div>
+                        <div class="text-xs">پیام‌ها</div>
+                    </button>
+                    <button onclick="showAdminSection('settings')" class="nav-btn p-3 rounded-xl" id="admin-mobile-nav-settings">
+                        <div class="text-lg">⚙️</div>
+                        <div class="text-xs">تنظیمات</div>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Admin Content -->
+            <main class="main-content px-6">
+                <!-- Dashboard Section -->
+                <section id="admin-dashboard-section" class="admin-section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="stats-card rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-3xl">👥</div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-gray-800" id="admin-total-customers">0</div>
+                                    <div class="text-sm text-gray-600">کل مشتریان</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-card rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-3xl">💰</div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-gray-800" id="admin-total-revenue">0</div>
+                                    <div class="text-sm text-gray-600">کل درآمد (تومان)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-card rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-3xl">📅</div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-gray-800" id="admin-today-appointments">0</div>
+                                    <div class="text-sm text-gray-600">نوبت‌های امروز</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-card rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="text-3xl">⭐</div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-gray-800" id="admin-vip-customers">0</div>
+                                    <div class="text-sm text-gray-600">مشتریان VIP</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activities -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            🕐 فعالیت‌های اخیر
+                        </h2>
+                        <div id="admin-recent-activities" class="space-y-4">
+                            <div class="text-center text-gray-500 py-8">
+                                هنوز فعالیتی ثبت نشده است 🌸
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Other admin sections remain the same as before -->
+                <!-- Customers Section -->
+                <section id="admin-customers-section" class="admin-section hidden">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                👥 مدیریت مشتریان
+                            </h2>
+                            <input type="text" id="admin-customer-search" placeholder="جستجو مشتری..." class="input-field w-64">
+                        </div>
+                        
+                        <div id="admin-customers-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <!-- Customers will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Appointments Section -->
+                <section id="admin-appointments-section" class="admin-section hidden">
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            📅 مدیریت نوبت‌ها
+                        </h2>
+                        
+                        <div id="admin-appointments-list" class="space-y-4">
+                            <!-- Appointments will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Service History Section -->
+                <section id="admin-services-section" class="admin-section hidden">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+                            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                📋 ثبت سابقه خدمات
+                            </h2>
+                            <button onclick="showAddServiceModal()" class="gradient-btn text-white px-4 py-2 rounded-xl">
+                                ➕ ثبت خدمت جدید
+                            </button>
+                        </div>
+                        
+                        <div id="admin-services-list" class="space-y-4">
+                            <!-- Service history will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section id="admin-messages-section" class="admin-section hidden">
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            💌 پیام‌ها و تبلیغات
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Send Message -->
+                            <div class="customer-card rounded-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">📤 ارسال پیام</h3>
+                                <div class="space-y-4">
+                                    <select id="admin-message-recipient" class="input-field w-full">
+                                        <option value="all">همه مشتریان</option>
+                                        <option value="vip">مشتریان VIP</option>
+                                        <option value="loyal">مشتریان وفادار</option>
+                                        <option value="new">مشتریان جدید</option>
+                                    </select>
+                                    <textarea id="admin-message-content" placeholder="متن پیام..." class="input-field w-full h-32 resize-none"></textarea>
+                                    <button onclick="sendAdminMessage()" class="gradient-btn text-white px-6 py-3 rounded-xl w-full">
+                                        📤 ارسال پیام
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Message Templates -->
+                            <div class="customer-card rounded-xl p-6">
+                                <h3 class="font-bold text-gray-800 mb-4">📝 قالب‌های آماده</h3>
+                                <div class="space-y-3">
+                                    <button onclick="useAdminTemplate('welcome')" class="w-full text-right p-3 rounded-lg bg-white bg-opacity-50 hover:bg-opacity-70 transition-all">
+                                        🌸 پیام خوش‌آمدگویی
+                                    </button>
+                                    <button onclick="useAdminTemplate('reminder')" class="w-full text-right p-3 rounded-lg bg-white bg-opacity-50 hover:bg-opacity-70 transition-all">
+                                        ⏰ یادآوری نوبت
+                                    </button>
+                                    <button onclick="useAdminTemplate('discount')" class="w-full text-right p-3 rounded-lg bg-white bg-opacity-50 hover:bg-opacity-70 transition-all">
+                                        🎁 کد تخفیف ویژه
+                                    </button>
+                                    <button onclick="useAdminTemplate('birthday')" class="w-full text-right p-3 rounded-lg bg-white bg-opacity-50 hover:bg-opacity-70 transition-all">
+                                        🎂 تبریک تولد
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="admin-reports-section" class="admin-section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Revenue Chart -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                📊 گزارش درآمد
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>درآمد امروز:</span>
+                                    <span class="font-bold" id="admin-today-revenue">0 تومان</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>درآمد این ماه:</span>
+                                    <span class="font-bold" id="admin-month-revenue">0 تومان</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>میانگین درآمد روزانه:</span>
+                                    <span class="font-bold" id="admin-avg-daily-revenue">0 تومان</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Stats -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                👥 آمار مشتریان
+                            </h2>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>مشتریان جدید این ماه:</span>
+                                    <span class="font-bold" id="admin-new-customers-month">0</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>مشتریان فعال:</span>
+                                    <span class="font-bold" id="admin-active-customers">0</span>
+                                </div>
+                                <div class="flex justify-between items-center p-4 bg-white bg-opacity-30 rounded-xl">
+                                    <span>میانگین مراجعات:</span>
+                                    <span class="font-bold" id="admin-avg-visits">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Customers -->
+                    <div class="glass-card rounded-2xl p-6 mt-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            🏆 برترین مشتریان
+                        </h2>
+                        <div id="admin-top-customers" class="space-y-3">
+                            <!-- Top customers will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Loyalty Section -->
+                <section id="admin-loyalty-section" class="admin-section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Loyalty Settings -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                🎁 تنظیمات وفاداری
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">درصد امتیاز هر مراجعه:</label>
+                                    <input type="number" id="admin-loyalty-percentage" value="5" min="1" max="20" class="input-field w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">تعداد معرفی برای جلسه رایگان:</label>
+                                    <input type="number" id="admin-referral-count" value="3" min="1" max="10" class="input-field w-full">
+                                </div>
+                                <button onclick="saveAdminLoyaltySettings()" class="gradient-btn text-white px-6 py-3 rounded-xl w-full">
+                                    💾 ذخیره تنظیمات
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Create Campaign -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                🎯 ایجاد کمپین
+                            </h2>
+                            <div class="space-y-4">
+                                <input type="text" id="admin-campaign-name" placeholder="نام کمپین..." class="input-field w-full">
+                                <input type="number" id="admin-campaign-discount" placeholder="درصد تخفیف..." class="input-field w-full">
+                                <input type="date" id="admin-campaign-expiry" class="input-field w-full">
+                                <textarea id="admin-campaign-description" placeholder="توضیحات کمپین..." class="input-field w-full h-24 resize-none"></textarea>
+                                <button onclick="createAdminCampaign()" class="gradient-btn text-white px-6 py-3 rounded-xl w-full">
+                                    🚀 ایجاد کمپین
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Campaigns -->
+                    <div class="glass-card rounded-2xl p-6 mt-6">
+                        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            🎪 کمپین‌های فعال
+                        </h2>
+                        <div id="admin-active-campaigns" class="space-y-4">
+                            <div class="text-center text-gray-500 py-8">
+                                هنوز کمپینی ایجاد نشده است 🎁
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="admin-settings-section" class="admin-section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- System Settings -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                ⚙️ تنظیمات سیستم
+                            </h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">نام سالن:</label>
+                                    <input type="text" id="admin-salon-name" value="سالن زیبایی مریم عمادی" class="input-field w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">شماره تماس:</label>
+                                    <input type="text" id="admin-salon-phone" value="09395975018" class="input-field w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">آدرس:</label>
+                                    <textarea id="admin-salon-address" class="input-field w-full h-20 resize-none">اصفهان، میدان آزادی، مجتمع پرپونه</textarea>
+                                </div>
+                                <button onclick="saveAdminSettings()" class="gradient-btn text-white px-6 py-3 rounded-xl w-full">
+                                    💾 ذخیره تنظیمات
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Data Management -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                                🗄️ مدیریت داده‌ها
+                            </h2>
+                            <div class="space-y-4">
+                                <button onclick="backupData()" class="gradient-btn text-white px-6 py-4 rounded-xl w-full">
+                                    💾 پشتیبان‌گیری
+                                </button>
+                                <button onclick="restoreData()" class="gradient-btn text-white px-6 py-4 rounded-xl w-full">
+                                    📥 بازیابی
+                                </button>
+                                <button onclick="clearAllData()" class="bg-red-400 hover:bg-red-500 text-white px-6 py-4 rounded-xl transition-all w-full">
+                                    🗑️ پاک‌سازی کامل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Modals -->
+        <!-- Book Appointment Modal -->
+        <div id="book-appointment-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="modal-content rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    📅 رزرو نوبت جدید
+                </h3>
+                <div class="space-y-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">تاریخ و ساعت نوبت:</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="text" id="book-appointment-date" placeholder="1403/09/15" class="input-field" maxlength="10" oninput="formatPersianDate(this)">
+                            <input type="time" id="book-appointment-time" class="input-field">
+                        </div>
+                    </div>
+                    <select id="book-appointment-service" class="input-field w-full">
+                        <option value="manicure">مانیکور - 250,000 تومان</option>
+                        <option value="laminate">استحکام سازی ناخن طبیعی (لمینت) - 450,000 تومان</option>
+                        <option value="initial-extension">کاشت اولیه - 600,000 تومان</option>
+                        <option value="repair">ترمیم - 500,000 تومان</option>
+                        <option value="colleague-repair">ترمیم همکار - 550,000 تومان</option>
+                        <option value="gel-polish">ژل پولیش دست - 300,000 تومان</option>
+                        <option value="shape-fix">اصلاح فرم و ناخن شکسته - 50,000 تومان</option>
+                    </select>
+                    
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">خدمات اضافی (اختیاری):</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 p-2 bg-white bg-opacity-30 rounded-lg">
+                                <input type="checkbox" id="additional-french" value="french" class="rounded">
+                                <span class="text-sm">فرنچ (+150,000)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white bg-opacity-30 rounded-lg">
+                                <input type="checkbox" id="additional-ombre" value="ombre" class="rounded">
+                                <span class="text-sm">آمبره (+180,000)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white bg-opacity-30 rounded-lg">
+                                <input type="checkbox" id="additional-galaxy" value="galaxy-gel" class="rounded">
+                                <span class="text-sm">لاک ژل کهکشانی (+60,000)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-2 bg-white bg-opacity-30 rounded-lg">
+                                <input type="checkbox" id="additional-lens" value="lens-chrome" class="rounded">
+                                <span class="text-sm">دیزاین لنز و کروم هر انگشت (+20,000)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <textarea id="book-appointment-notes" placeholder="یادداشت‌ها..." class="input-field w-full h-20 resize-none"></textarea>
+                    <div class="flex gap-3">
+                        <button onclick="bookAppointment()" class="gradient-btn text-white px-6 py-3 rounded-xl flex-1">
+                            ✅ رزرو
+                        </button>
+                        <button onclick="closeModal('book-appointment-modal')" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl flex-1">
+                            ❌ لغو
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Service Modal -->
+        <div id="add-service-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="modal-content rounded-2xl p-6 w-full max-w-md">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                    📋 ثبت خدمت انجام شده
+                </h3>
+                <div class="space-y-4">
+                    <select id="service-customer-select" class="input-field w-full">
+                        <option value="">انتخاب مشتری...</option>
+                    </select>
+                    <select id="service-type-select" class="input-field w-full" onchange="toggleCustomServiceType()">
+                        <option value="manicure">مانیکور</option>
+                        <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
+                        <option value="initial-extension">کاشت اولیه</option>
+                        <option value="repair">ترمیم</option>
+                        <option value="colleague-repair">ترمیم همکار</option>
+                        <option value="gel-polish">ژل پولیش دست</option>
+                        <option value="shape-fix">اصلاح فرم و ناخن شکسته</option>
+                        <option value="other">سایر</option>
+                    </select>
+                    <input type="text" id="service-custom-type" placeholder="نوع خدمت (در صورت انتخاب سایر)" class="input-field w-full hidden">
+                    <input type="number" id="service-price" placeholder="قیمت (تومان)" class="input-field w-full">
+                    <textarea id="service-description" placeholder="توضیحات خدمت انجام شده..." class="input-field w-full h-24 resize-none"></textarea>
+                    <div class="flex gap-3">
+                        <button onclick="addServiceRecord()" class="gradient-btn text-white px-6 py-3 rounded-xl flex-1">
+                            ✅ ثبت
+                        </button>
+                        <button onclick="closeModal('add-service-modal')" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl flex-1">
+                            ❌ لغو
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Panel Modal -->
+        <div id="customer-panel-modal" class="modal fixed inset-0 z-50 hidden items-center justify-center p-4">
+            <div class="modal-content rounded-2xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2" id="customer-panel-title">
+                        👤 پنل مشتری
+                    </h3>
+                    <button onclick="closeModal('customer-panel-modal')" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl">
+                        ❌ بستن
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Customer Info -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">اطلاعات مشتری</h4>
+                        <div id="modal-customer-info" class="space-y-3">
+                            <!-- Customer info will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Balance Management -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">مدیریت حساب</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                                <span>شارژ فعلی:</span>
+                                <span class="font-bold text-lg" id="modal-customer-balance">0 تومان</span>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <input type="number" id="balance-amount" placeholder="مبلغ (تومان)" class="input-field flex-1">
+                                <button onclick="addCustomerBalance()" class="gradient-btn text-white px-4 py-2 rounded-xl">
+                                    ➕ شارژ
+                                </button>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <input type="number" id="deduct-amount" placeholder="مبلغ کسر (تومان)" class="input-field flex-1">
+                                <button onclick="deductCustomerBalance()" class="bg-red-400 text-white px-4 py-2 rounded-xl">
+                                    ➖ کسر
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add Service -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">ثبت خدمت جدید</h4>
+                        <div class="space-y-4">
+                            <select id="modal-service-type" class="input-field w-full" onchange="toggleModalCustomServiceType()">
+                                <option value="manicure">مانیکور</option>
+                                <option value="laminate">استحکام سازی ناخن طبیعی (لمینت)</option>
+                                <option value="initial-extension">کاشت اولیه</option>
+                                <option value="repair">ترمیم</option>
+                                <option value="colleague-repair">ترمیم همکار</option>
+                                <option value="gel-polish">ژل پولیش دست</option>
+                                <option value="shape-fix">اصلاح فرم و ناخن شکسته</option>
+                                <option value="other">سایر</option>
+                            </select>
+                            <input type="text" id="modal-custom-type" placeholder="نوع خدمت (در صورت انتخاب سایر)" class="input-field w-full hidden">
+                            <input type="number" id="modal-service-price" placeholder="قیمت (تومان)" class="input-field w-full">
+                            <textarea id="modal-service-description" placeholder="توضیحات خدمت..." class="input-field w-full h-20 resize-none"></textarea>
+                            <div class="flex gap-2">
+                                <button onclick="addModalServiceRecord()" class="gradient-btn text-white px-4 py-2 rounded-xl flex-1">
+                                    ✅ ثبت خدمت
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service History -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h4 class="font-bold text-gray-800 mb-4">سابقه خدمات</h4>
+                        <div id="modal-service-history" class="space-y-3 max-h-60 overflow-y-auto">
+                            <!-- Service history will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let customers = JSON.parse(localStorage.getItem('nail-salon-customers') || '[]');
+        let appointments = JSON.parse(localStorage.getItem('nail-salon-appointments') || '[]');
+        let settings = JSON.parse(localStorage.getItem('nail-salon-settings') || '{}');
+        let campaigns = JSON.parse(localStorage.getItem('nail-salon-campaigns') || '[]');
+        let serviceRecords = JSON.parse(localStorage.getItem('nail-salon-service-records') || '[]');
+        let currentUser = null;
+        let userType = null; // 'customer' or 'admin'
+
+        // Service prices
+        const servicePrices = {
+            'manicure': 250000,
+            'laminate': 500000,
+            'initial-extension': 600000,
+            'repair': 500000,
+            'colleague-repair': 550000,
+            'gel-polish': 300000,
+            'shape-fix': 50000,
+        };
+
+        // Additional services prices
+        const additionalServicePrices = {
+            'french': 150000,
+            'ombre': 180000,
+            'galaxy-gel': 60000,
+            'lens-chrome': 20000
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            showAuthScreen();
+            
+            // Set default active tab
+            showAuthTab('customer-login');
+        });
+
+        // Authentication functions
+        function showAuthTab(tabName) {
+            // Hide all forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.auth-tab').forEach(tab => {
+                tab.classList.remove('gradient-btn', 'text-white');
+                tab.classList.add('text-gray-600');
+            });
+            
+            // Show selected form
+            document.getElementById(tabName + '-form').classList.remove('hidden');
+            
+            // Add active class to selected tab
+            document.getElementById('tab-' + tabName).classList.add('gradient-btn', 'text-white');
+            document.getElementById('tab-' + tabName).classList.remove('text-gray-600');
+        }
+
+        function customerLogin() {
+            const phone = document.getElementById('customer-login-phone').value.trim();
+            
+            if (!phone) {
+                showNotification('لطفاً شماره تماس را وارد کنید', 'error');
+                return;
+            }
+            
+            const customer = customers.find(c => c.phone === phone);
+            if (!customer) {
+                showNotification('مشتری با این شماره یافت نشد. لطفاً ابتدا ثبت‌نام کنید', 'error');
+                return;
+            }
+            
+            currentUser = customer;
+            userType = 'customer';
+            showCustomerPanel();
+            showNotification(`خوش آمدید ${customer.name}! 🌸`, 'success');
+        }
+
+        function customerRegister() {
+            const name = document.getElementById('customer-register-name').value.trim();
+            const phone = document.getElementById('customer-register-phone').value.trim();
+            const birthday = document.getElementById('customer-register-birthday').value;
+            
+            if (!name || !phone) {
+                showNotification('لطفاً نام و شماره تماس را وارد کنید', 'error');
+                return;
+            }
+            
+            // Check if customer already exists
+            if (customers.find(c => c.phone === phone)) {
+                showNotification('مشتری با این شماره قبلاً ثبت‌نام کرده است', 'error');
+                return;
+            }
+            
+            const customer = {
+                id: Date.now().toString(),
+                name,
+                phone,
+                birthday,
+                visits: 0,
+                balance: 30000, // Welcome bonus
+                createdAt: new Date().toISOString()
+            };
+            
+            customers.push(customer);
+            localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+            
+            currentUser = customer;
+            userType = 'customer';
+            showCustomerPanel();
+            showNotification(`ثبت‌نام موفق! خوش آمدید ${customer.name}! 🎉 حساب شما با ۳۰ هزار تومان شارژ شد! 💰`, 'success');
+        }
+
+        function adminLogin() {
+            const username = document.getElementById('admin-username').value.trim();
+            const password = document.getElementById('admin-password').value.trim();
+            
+            if (username === 'ادمین' && password === '123456789') {
+                userType = 'admin';
+                showAdminPanel();
+                showNotification('ورود موفق به پنل مدیریت! ⚙️', 'success');
+            } else {
+                showNotification('نام کاربری یا رمز عبور اشتباه است', 'error');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            userType = null;
+            showAuthScreen();
+            
+            // Clear forms
+            document.getElementById('customer-login-phone').value = '';
+            document.getElementById('customer-register-name').value = '';
+            document.getElementById('customer-register-phone').value = '';
+            document.getElementById('customer-register-birthday').value = '';
+            document.getElementById('admin-username').value = '';
+            document.getElementById('admin-password').value = '';
+            
+            showNotification('خروج موفق! 👋', 'success');
+        }
+
+        // Screen management
+        function showAuthScreen() {
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('customer-panel').classList.add('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+        }
+
+        function showCustomerPanel() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('customer-panel').classList.remove('hidden');
+            document.getElementById('admin-panel').classList.add('hidden');
+            
+            loadCustomerData();
+            showCustomerSection('profile');
+        }
+
+        function showAdminPanel() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('customer-panel').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            
+            loadAdminData();
+            showAdminSection('dashboard');
+        }
+
+        // Customer panel functions
+        function loadCustomerData() {
+            if (!currentUser) return;
+            
+            // Update header
+            document.getElementById('customer-avatar').textContent = currentUser.name.charAt(0);
+            document.getElementById('customer-welcome').textContent = `سلام ${currentUser.name}`;
+            
+            // Update stats
+            document.getElementById('customer-visits').textContent = currentUser.visits || 0;
+            document.getElementById('customer-balance').textContent = (currentUser.balance || 0).toLocaleString();
+            
+            // Load profile info
+            loadCustomerProfile();
+            loadCustomerAppointments();
+
+            loadCustomerCampaigns();
+            loadCustomerServiceHistory();
+        }
+
+        function showCustomerSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.customer-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById('customer-' + sectionName + '-section').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('#customer-panel .nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById('customer-nav-' + sectionName)?.classList.add('active');
+            document.getElementById('customer-mobile-nav-' + sectionName)?.classList.add('active');
+        }
+
+        function loadCustomerProfile() {
+            if (!currentUser) return;
+            
+            const profileInfo = document.getElementById('customer-profile-info');
+            profileInfo.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                        <span class="text-gray-600">نام:</span>
+                        <span class="font-medium">${currentUser.name}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                        <span class="text-gray-600">شماره تماس:</span>
+                        <span class="font-medium">${currentUser.phone}</span>
+                    </div>
+                    ${currentUser.birthday ? `
+                        <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                            <span class="text-gray-600">تاریخ تولد:</span>
+                            <span class="font-medium">${currentUser.birthday}</span>
+                        </div>
+                    ` : ''}
+                    <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                        <span class="text-gray-600">عضویت از:</span>
+                        <span class="font-medium">${new Date(currentUser.createdAt).toLocaleDateString('fa-IR')}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Load recent appointments
+            loadCustomerRecentAppointments();
+        }
+
+        function loadCustomerRecentAppointments() {
+            if (!currentUser) return;
+            
+            const customerAppointments = appointments
+                .filter(a => a.customerId === currentUser.id)
+                .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
+                .slice(0, 3);
+            
+            const container = document.getElementById('customer-recent-appointments');
+            
+            if (customerAppointments.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز نوبتی ثبت نشده است 📅</div>';
+                return;
+            }
+            
+            container.innerHTML = customerAppointments.map(appointment => {
+                const displayDate = appointment.persianDate || new Date(appointment.datetime).toLocaleDateString('fa-IR');
+                const displayTime = appointment.persianTime || new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                
+                return `
+                    <div class="flex items-center justify-between p-4 bg-white bg-opacity-30 rounded-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">📅</div>
+                            <div>
+                                <div class="font-medium">${getServiceName(appointment.service)}</div>
+                                <div class="text-sm text-gray-600">${date} - ${time}</div>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm font-medium">${servicePrices[appointment.service].toLocaleString()} تومان</div>
+                            <div class="badge ${appointment.status}">${getStatusText(appointment.status)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadCustomerAppointments() {
+            if (!currentUser) return;
+            
+            const customerAppointments = appointments
+                .filter(a => a.customerId === currentUser.id)
+                .sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+            
+            const container = document.getElementById('customer-appointments-list');
+            
+            if (customerAppointments.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز نوبتی ثبت نشده است 📅</div>';
+                return;
+            }
+            
+            container.innerHTML = customerAppointments.map(appointment => {
+                const displayDate = appointment.persianDate || new Date(appointment.datetime).toLocaleDateString('fa-IR');
+                const displayTime = appointment.persianTime || new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                
+                return `
+                    <div class="customer-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">
+                                    📅
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-800">${getServiceName(appointment.service)}</div>
+                                    <div class="text-sm text-gray-600">${displayDate} - ${displayTime}</div>
+                                </div>
+                            </div>
+                            <div class="badge ${appointment.status}">${getStatusText(appointment.status)}</div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span>قیمت:</span>
+                                <span class="font-medium">${servicePrices[appointment.service].toLocaleString()} تومان</span>
+                            </div>
+                            ${appointment.notes ? `
+                                <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                                    <div class="text-sm text-gray-700">${appointment.notes}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        ${appointment.status === 'pending' ? `
+                            <button onclick="cancelCustomerAppointment('${appointment.id}')" class="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-sm w-full transition-all">
+                                ❌ لغو نوبت
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+
+        function loadCustomerCampaigns() {
+            const activeCampaigns = campaigns.filter(c => c.active && new Date(c.expiry) > new Date());
+            const container = document.getElementById('customer-active-campaigns');
+            
+            if (activeCampaigns.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">در حال حاضر کمپین فعالی وجود ندارد 🎁</div>';
+                return;
+            }
+            
+            container.innerHTML = activeCampaigns.map(campaign => `
+                <div class="customer-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${campaign.name}</h4>
+                            <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+                        </div>
+                        <div class="badge">${new Date(campaign.expiry).toLocaleDateString('fa-IR')}</div>
+                    </div>
+                    
+                    ${campaign.description ? `
+                        <p class="text-gray-700 mb-4">${campaign.description}</p>
+                    ` : ''}
+                    
+                    <button onclick="useCampaign('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-xl text-sm w-full">
+                        🎁 استفاده از کمپین
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadCustomerServiceHistory() {
+            if (!currentUser) return;
+            
+            const customerServices = serviceRecords
+                .filter(s => s.customerId === currentUser.id)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const container = document.getElementById('customer-service-history');
+            
+            if (customerServices.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز سابقه خدماتی ثبت نشده است 📋</div>';
+                return;
+            }
+            
+            container.innerHTML = customerServices.map(service => {
+                const date = new Date(service.date).toLocaleDateString('fa-IR');
+                
+                return `
+                    <div class="customer-card rounded-xl p-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="text-2xl">💅</div>
+                            <div>
+                                <div class="font-medium">${service.serviceType === 'other' ? service.customServiceType : getServiceName(service.serviceType)}</div>
+                                <div class="text-sm text-gray-600">${date}</div>
+                            </div>
+                        </div>
+                        
+                        ${service.description ? `
+                            <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                                <div class="text-sm text-gray-700">${service.description}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showBookAppointmentModal() {
+            document.getElementById('book-appointment-modal').classList.remove('hidden');
+            document.getElementById('book-appointment-modal').classList.add('flex');
+        }
+
+        function bookAppointment() {
+            if (!currentUser) return;
+            
+            const date = document.getElementById('book-appointment-date').value;
+            const time = document.getElementById('book-appointment-time').value;
+            const service = document.getElementById('book-appointment-service').value;
+            const notes = document.getElementById('book-appointment-notes').value.trim();
+            
+            // Get additional services
+            const additionalServices = [];
+            if (document.getElementById('additional-french').checked) additionalServices.push('french');
+            if (document.getElementById('additional-ombre').checked) additionalServices.push('ombre');
+            if (document.getElementById('additional-galaxy').checked) additionalServices.push('galaxy-gel');
+            if (document.getElementById('additional-lens').checked) additionalServices.push('lens-chrome');
+            
+            if (!date || !time || !service) {
+                showNotification('لطفاً تاریخ، ساعت و خدمت را انتخاب کنید', 'error');
+                return;
+            }
+            
+            // Convert Persian date to Gregorian for storage
+            const datetime = convertPersianToGregorian(date, time);
+            
+            const appointment = {
+                id: Date.now().toString(),
+                customerId: currentUser.id,
+                datetime: datetime.toISOString(),
+                persianDate: date,
+                persianTime: time,
+                service,
+                additionalServices,
+                notes,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            appointments.push(appointment);
+            localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+            
+            // Clear form
+            document.getElementById('book-appointment-date').value = '';
+            document.getElementById('book-appointment-time').value = '';
+            document.getElementById('book-appointment-service').value = 'manicure';
+            document.getElementById('book-appointment-notes').value = '';
+            document.getElementById('additional-french').checked = false;
+            document.getElementById('additional-ombre').checked = false;
+            document.getElementById('additional-galaxy').checked = false;
+            document.getElementById('additional-lens').checked = false;
+            
+            closeModal('book-appointment-modal');
+            loadCustomerAppointments();
+            loadCustomerRecentAppointments();
+            showNotification('نوبت شما با موفقیت ثبت شد! منتظر تایید باشید 📅', 'success');
+        }
+
+        function cancelCustomerAppointment(appointmentId) {
+            if (confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟')) {
+                const appointment = appointments.find(a => a.id === appointmentId);
+                if (appointment) {
+                    appointment.status = 'cancelled';
+                    localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                    loadCustomerAppointments();
+                    loadCustomerRecentAppointments();
+                    showNotification('نوبت لغو شد', 'success');
+                }
+            }
+        }
+
+        function shareReferralCode() {
+            const referralCode = `REFER${currentUser.id}`;
+            const message = `سلام! من از خدمات سالن زیبایی گل نرگس بسیار راضی هستم. با کد معرفی ${referralCode} ثبت‌نام کن تا هر دوی ما تخفیف بگیریم! 🌸💅`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'کد معرفی سالن زیبایی',
+                    text: message
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(message).then(() => {
+                    showNotification('کد معرفی کپی شد! 📋', 'success');
+                });
+            }
+        }
+
+        function useCampaign(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (campaign) {
+                showNotification(`کمپین "${campaign.name}" فعال شد! ${campaign.discount}% تخفیف در نوبت بعدی شما اعمال می‌شود 🎁`, 'success');
+            }
+        }
+
+        // Admin panel functions (simplified versions of previous functions)
+        function loadAdminData() {
+            updateAdminStats();
+            loadAdminRecentActivities();
+        }
+
+        function showAdminSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById('admin-' + sectionName + '-section').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('#admin-panel .nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById('admin-nav-' + sectionName)?.classList.add('active');
+            document.getElementById('admin-mobile-nav-' + sectionName)?.classList.add('active');
+            
+            // Load section data
+            switch(sectionName) {
+                case 'dashboard':
+                    loadAdminDashboard();
+                    break;
+                case 'customers':
+                    loadAdminCustomers();
+                    break;
+                case 'appointments':
+                    loadAdminAppointments();
+                    break;
+                case 'reports':
+                    loadAdminReports();
+                    break;
+                case 'services':
+                    loadAdminServices();
+                    break;
+                case 'loyalty':
+                    loadAdminLoyalty();
+                    break;
+            }
+        }
+
+        function updateAdminStats() {
+            document.getElementById('admin-total-customers').textContent = customers.length;
+            document.getElementById('admin-total-revenue').textContent = calculateTotalRevenue().toLocaleString();
+            document.getElementById('admin-today-appointments').textContent = getTodayAppointments().length;
+            document.getElementById('admin-vip-customers').textContent = getVIPCustomers().length;
+        }
+
+        function loadAdminDashboard() {
+            updateAdminStats();
+            loadAdminRecentActivities();
+        }
+
+        function loadAdminRecentActivities() {
+            const activitiesContainer = document.getElementById('admin-recent-activities');
+            const recentAppointments = appointments
+                .sort((a, b) => new Date(b.datetime) - new Date(a.datetime))
+                .slice(0, 5);
+            
+            if (recentAppointments.length === 0) {
+                activitiesContainer.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز فعالیتی ثبت نشده است 🌸</div>';
+                return;
+            }
+            
+            activitiesContainer.innerHTML = recentAppointments.map(appointment => {
+                const customer = customers.find(c => c.id === appointment.customerId);
+                const date = new Date(appointment.datetime).toLocaleDateString('fa-IR');
+                const time = new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                
+                return `
+                    <div class="flex items-center justify-between p-4 bg-white bg-opacity-30 rounded-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">📅</div>
+                            <div>
+                                <div class="font-medium">${customer?.name || 'نامشخص'}</div>
+                                <div class="text-sm text-gray-600">${getServiceName(appointment.service)}</div>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-sm font-medium">${date}</div>
+                            <div class="text-sm text-gray-600">${time}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadAdminCustomers() {
+            const container = document.getElementById('admin-customers-list');
+            
+            if (customers.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">هنوز مشتری‌ای ثبت نشده است 👥</div>';
+                return;
+            }
+            
+            container.innerHTML = customers.map(customer => `
+                <div class="customer-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">
+                                ${customer.name.charAt(0)}
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800">${customer.name}</div>
+                                <div class="text-sm text-gray-600">${customer.phone}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>مراجعات:</span>
+                            <span class="font-medium">${customer.visits || 0} بار</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>شارژ:</span>
+                            <span class="font-medium">${(customer.balance || 0).toLocaleString()} تومان</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openCustomerPanel('${customer.id}')" class="gradient-btn text-white px-4 py-2 rounded-xl w-full">
+                        👤 مشاهده پنل مشتری
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadAdminAppointments() {
+            const container = document.getElementById('admin-appointments-list');
+            
+            if (appointments.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز نوبتی ثبت نشده است 📅</div>';
+                return;
+            }
+            
+            const sortedAppointments = appointments.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
+            
+            container.innerHTML = sortedAppointments.map(appointment => {
+                const customer = customers.find(c => c.id === appointment.customerId);
+                const date = new Date(appointment.datetime).toLocaleDateString('fa-IR');
+                const time = new Date(appointment.datetime).toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+                
+                return `
+                    <div class="customer-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">
+                                    📅
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-800">${customer?.name || 'نامشخص'}</div>
+                                    <div class="text-sm text-gray-600">${customer?.phone || ''}</div>
+                                </div>
+                            </div>
+                            <div class="badge ${appointment.status}">${getStatusText(appointment.status)}</div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span>خدمت:</span>
+                                <span class="font-medium">${getServiceName(appointment.service)}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>تاریخ:</span>
+                                <span class="font-medium">${displayDate}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>ساعت:</span>
+                                <span class="font-medium">${displayTime}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span>قیمت:</span>
+                                <span class="font-medium">${servicePrices[appointment.service].toLocaleString()} تومان</span>
+                            </div>
+                        </div>
+                        
+                        ${appointment.notes ? `
+                            <div class="bg-white bg-opacity-30 rounded-lg p-3 mb-4">
+                                <div class="text-sm text-gray-700">${appointment.notes}</div>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="flex gap-2">
+                            ${appointment.status === 'pending' ? `
+                                <button onclick="confirmAdminAppointment('${appointment.id}')" class="gradient-btn text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                    ✅ تایید
+                                </button>
+                                <button onclick="cancelAdminAppointment('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                    ❌ لغو
+                                </button>
+                            ` : appointment.status === 'confirmed' ? `
+                                <button onclick="completeAdminAppointment('${appointment.id}')" class="gradient-btn text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                    ✅ تکمیل
+                                </button>
+                                <button onclick="cancelAdminAppointment('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm flex-1">
+                                    ❌ لغو
+                                </button>
+                            ` : `
+                                <button onclick="deleteAdminAppointment('${appointment.id}')" class="bg-red-400 text-white px-3 py-2 rounded-lg text-sm">
+                                    🗑️ حذف
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Admin appointment management
+        function confirmAdminAppointment(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (appointment) {
+                appointment.status = 'confirmed';
+                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                loadAdminAppointments();
+                showNotification('نوبت تایید شد! ✅', 'success');
+            }
+        }
+
+        function completeAdminAppointment(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (appointment) {
+                appointment.status = 'completed';
+                
+                // Update customer stats
+                const customer = customers.find(c => c.id === appointment.customerId);
+                if (customer) {
+                    customer.visits = (customer.visits || 0) + 1;
+                }
+                
+                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+                loadAdminAppointments();
+                updateAdminStats();
+                showNotification('نوبت تکمیل شد! 🎉', 'success');
+            }
+        }
+
+        function cancelAdminAppointment(appointmentId) {
+            const appointment = appointments.find(a => a.id === appointmentId);
+            if (appointment && confirm('آیا مطمئن هستید که می‌خواهید این نوبت را لغو کنید؟')) {
+                appointment.status = 'cancelled';
+                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                loadAdminAppointments();
+                showNotification('نوبت لغو شد', 'success');
+            }
+        }
+
+        function deleteAdminAppointment(appointmentId) {
+            if (confirm('آیا مطمئن هستید که می‌خواهید این نوبت را حذف کنید؟')) {
+                appointments = appointments.filter(a => a.id !== appointmentId);
+                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                loadAdminAppointments();
+                updateAdminStats();
+                showNotification('نوبت حذف شد', 'success');
+            }
+        }
+
+        let selectedCustomerId = null;
+
+        function openCustomerPanel(customerId) {
+            selectedCustomerId = customerId;
+            const customer = customers.find(c => c.id === customerId);
+            if (!customer) return;
+            
+            // Update modal title
+            document.getElementById('customer-panel-title').textContent = `👤 پنل ${customer.name}`;
+            
+            // Load customer info
+            loadModalCustomerInfo(customer);
+            
+            // Load service history
+            loadModalServiceHistory(customerId);
+            
+            // Show modal
+            document.getElementById('customer-panel-modal').classList.remove('hidden');
+            document.getElementById('customer-panel-modal').classList.add('flex');
+        }
+
+        function loadModalCustomerInfo(customer) {
+            const container = document.getElementById('modal-customer-info');
+            container.innerHTML = `
+                <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                    <span class="text-gray-600">نام:</span>
+                    <span class="font-medium">${customer.name}</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                    <span class="text-gray-600">شماره تماس:</span>
+                    <span class="font-medium">${customer.phone}</span>
+                </div>
+                ${customer.birthday ? `
+                    <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                        <span class="text-gray-600">تاریخ تولد:</span>
+                        <span class="font-medium">${customer.birthday}</span>
+                    </div>
+                ` : ''}
+                <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                    <span class="text-gray-600">تعداد مراجعات:</span>
+                    <span class="font-medium">${customer.visits || 0} بار</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white bg-opacity-30 rounded-xl">
+                    <span class="text-gray-600">عضویت از:</span>
+                    <span class="font-medium">${new Date(customer.createdAt).toLocaleDateString('fa-IR')}</span>
+                </div>
+            `;
+            
+            // Update balance display
+            document.getElementById('modal-customer-balance').textContent = (customer.balance || 0).toLocaleString() + ' تومان';
+        }
+
+        function loadModalServiceHistory(customerId) {
+            const customerServices = serviceRecords
+                .filter(s => s.customerId === customerId)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const container = document.getElementById('modal-service-history');
+            
+            if (customerServices.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-4">هنوز سابقه خدماتی ثبت نشده است</div>';
+                return;
+            }
+            
+            container.innerHTML = customerServices.map(service => {
+                const date = new Date(service.date).toLocaleDateString('fa-IR');
+                const serviceName = service.serviceType === 'other' ? service.customServiceType : getServiceName(service.serviceType);
+                
+                return `
+                    <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-medium">${serviceName}</span>
+                            <span class="font-bold">${service.price.toLocaleString()} تومان</span>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">${date}</div>
+                        ${service.description ? `<div class="text-sm text-gray-700">${service.description}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addCustomerBalance() {
+            const amount = document.getElementById('balance-amount').value;
+            if (!amount || isNaN(amount) || !selectedCustomerId) return;
+            
+            const customer = customers.find(c => c.id === selectedCustomerId);
+            if (customer) {
+                customer.balance = (customer.balance || 0) + parseInt(amount);
+                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+                
+                // Update displays
+                loadModalCustomerInfo(customer);
+                loadAdminCustomers();
+                document.getElementById('balance-amount').value = '';
+                
+                showNotification(`${parseInt(amount).toLocaleString()} تومان به حساب ${customer.name} اضافه شد! 💰`, 'success');
+            }
+        }
+
+        function deductCustomerBalance() {
+            const amount = document.getElementById('deduct-amount').value;
+            if (!amount || isNaN(amount) || !selectedCustomerId) return;
+            
+            const customer = customers.find(c => c.id === selectedCustomerId);
+            if (customer) {
+                const deductAmount = parseInt(amount);
+                if ((customer.balance || 0) < deductAmount) {
+                    showNotification('موجودی حساب کافی نیست!', 'error');
+                    return;
+                }
+                
+                customer.balance = (customer.balance || 0) - deductAmount;
+                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+                
+                // Update displays
+                loadModalCustomerInfo(customer);
+                loadAdminCustomers();
+                document.getElementById('deduct-amount').value = '';
+                
+                showNotification(`${deductAmount.toLocaleString()} تومان از حساب ${customer.name} کسر شد! 💳`, 'success');
+            }
+        }
+
+        function toggleModalCustomServiceType() {
+            const serviceType = document.getElementById('modal-service-type').value;
+            const customTypeInput = document.getElementById('modal-custom-type');
+            
+            if (serviceType === 'other') {
+                customTypeInput.classList.remove('hidden');
+            } else {
+                customTypeInput.classList.add('hidden');
+                customTypeInput.value = '';
+            }
+        }
+
+        function addModalServiceRecord() {
+            if (!selectedCustomerId) return;
+            
+            const serviceType = document.getElementById('modal-service-type').value;
+            const customServiceType = document.getElementById('modal-custom-type').value.trim();
+            const price = document.getElementById('modal-service-price').value;
+            const description = document.getElementById('modal-service-description').value.trim();
+            
+            if (!serviceType || !price || !description) {
+                showNotification('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
+                return;
+            }
+            
+            if (serviceType === 'other' && !customServiceType) {
+                showNotification('لطفاً نوع خدمت را مشخص کنید', 'error');
+                return;
+            }
+            
+            const serviceRecord = {
+                id: Date.now().toString(),
+                customerId: selectedCustomerId,
+                serviceType,
+                customServiceType: serviceType === 'other' ? customServiceType : '',
+                price: parseInt(price),
+                description,
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            serviceRecords.push(serviceRecord);
+            localStorage.setItem('nail-salon-service-records', JSON.stringify(serviceRecords));
+            
+            // Update customer stats
+            const customer = customers.find(c => c.id === selectedCustomerId);
+            if (customer) {
+                customer.visits = (customer.visits || 0) + 1;
+                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+            }
+            
+            // Clear form
+            clearModalServiceForm();
+            
+            // Reload displays
+            loadModalCustomerInfo(customer);
+            loadModalServiceHistory(selectedCustomerId);
+            loadAdminCustomers();
+            updateAdminStats();
+            
+            showNotification('خدمت با موفقیت ثبت شد! 📋', 'success');
+        }
+
+        function addModalServiceFromBalance() {
+            if (!selectedCustomerId) return;
+            
+            const serviceType = document.getElementById('modal-service-type').value;
+            const customServiceType = document.getElementById('modal-custom-type').value.trim();
+            const price = document.getElementById('modal-service-price').value;
+            const description = document.getElementById('modal-service-description').value.trim();
+            
+            if (!serviceType || !price || !description) {
+                showNotification('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
+                return;
+            }
+            
+            if (serviceType === 'other' && !customServiceType) {
+                showNotification('لطفاً نوع خدمت را مشخص کنید', 'error');
+                return;
+            }
+            
+            const customer = customers.find(c => c.id === selectedCustomerId);
+            const servicePrice = parseInt(price);
+            
+            if (!customer || (customer.balance || 0) < servicePrice) {
+                showNotification('موجودی حساب مشتری کافی نیست!', 'error');
+                return;
+            }
+            
+            // Deduct from balance
+            customer.balance = (customer.balance || 0) - servicePrice;
+            
+            const serviceRecord = {
+                id: Date.now().toString(),
+                customerId: selectedCustomerId,
+                serviceType,
+                customServiceType: serviceType === 'other' ? customServiceType : '',
+                price: servicePrice,
+                description: description + ' (پرداخت از شارژ حساب)',
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            serviceRecords.push(serviceRecord);
+            customer.visits = (customer.visits || 0) + 1;
+            
+            localStorage.setItem('nail-salon-service-records', JSON.stringify(serviceRecords));
+            localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+            
+            // Clear form
+            clearModalServiceForm();
+            
+            // Reload displays
+            loadModalCustomerInfo(customer);
+            loadModalServiceHistory(selectedCustomerId);
+            loadAdminCustomers();
+            updateAdminStats();
+            
+            showNotification(`خدمت ثبت شد و ${servicePrice.toLocaleString()} تومان از شارژ کسر شد! 💳`, 'success');
+        }
+
+        function clearModalServiceForm() {
+            document.getElementById('modal-service-type').value = 'manicure';
+            document.getElementById('modal-custom-type').value = '';
+            document.getElementById('modal-custom-type').classList.add('hidden');
+            document.getElementById('modal-service-price').value = '';
+            document.getElementById('modal-service-description').value = '';
+        }
+
+        // Message functions
+        function sendAdminMessage() {
+            const recipient = document.getElementById('admin-message-recipient').value;
+            const content = document.getElementById('admin-message-content').value.trim();
+            
+            if (!content) {
+                showNotification('لطفاً متن پیام را وارد کنید', 'error');
+                return;
+            }
+            
+            let targetCustomers = [];
+            switch(recipient) {
+                case 'all':
+                    targetCustomers = customers;
+                    break;
+                case 'vip':
+                    targetCustomers = customers.filter(c => c.status === 'vip');
+                    break;
+                case 'loyal':
+                    targetCustomers = customers.filter(c => c.status === 'loyal');
+                    break;
+                case 'new':
+                    targetCustomers = customers.filter(c => c.status === 'new');
+                    break;
+            }
+            
+            // Simulate sending message
+            document.getElementById('admin-message-content').value = '';
+            showNotification(`پیام برای ${targetCustomers.length} مشتری ارسال شد! 📤`, 'success');
+        }
+
+        function useAdminTemplate(templateType) {
+            const templates = {
+                welcome: 'سلام عزیز! 🌸 به خانواده بزرگ سالن زیبایی ما خوش آمدید. امیدواریم تجربه‌ای فوق‌العاده داشته باشید! 💅✨',
+                reminder: 'سلام گل! 🌺 یادآوری می‌کنیم که نوبت شما فردا ساعت ... می‌باشد. منتظرتان هستیم! 📅💖',
+                discount: 'خبر خوش! 🎉 کد تخفیف ویژه شما: BEAUTY20 - ۲۰٪ تخفیف روی تمام خدمات تا پایان ماه! 🎁💅',
+                birthday: 'تولدت مبارک عزیز! 🎂🎉 به مناسبت تولدت، یک جلسه رایگان برات در نظر گرفتیم! 🎁💅'
+            };
+            
+            document.getElementById('admin-message-content').value = templates[templateType];
+        }
+
+        // Reports functions
+        function loadAdminServices() {
+            const container = document.getElementById('admin-services-list');
+            
+            if (serviceRecords.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز سابقه خدماتی ثبت نشده است 📋</div>';
+                return;
+            }
+            
+            const sortedServices = serviceRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sortedServices.map(service => {
+                const customer = customers.find(c => c.id === service.customerId);
+                const date = new Date(service.date).toLocaleDateString('fa-IR');
+                const serviceName = service.serviceType === 'other' ? service.customServiceType : getServiceName(service.serviceType);
+                
+                return `
+                    <div class="customer-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">
+                                    💅
+                                </div>
+                                <div>
+                                    <div class="font-bold text-gray-800">${customer?.name || 'نامشخص'}</div>
+                                    <div class="text-sm text-gray-600">${customer?.phone || ''}</div>
+                                </div>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-bold text-gray-800">${service.price.toLocaleString()} تومان</div>
+                                <div class="text-sm text-gray-600">${date}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex justify-between text-sm">
+                                <span>خدمت:</span>
+                                <span class="font-medium">${serviceName}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white bg-opacity-30 rounded-lg p-3">
+                            <div class="text-sm text-gray-700">${service.description}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadAdminReports() {
+            const today = new Date();
+            const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            // Calculate revenues from service records (more accurate)
+            const todayRevenue = serviceRecords
+                .filter(s => {
+                    const serviceDate = new Date(s.date);
+                    return serviceDate.toDateString() === today.toDateString();
+                })
+                .reduce((total, s) => total + (s.price || 0), 0);
+            
+            const monthRevenue = serviceRecords
+                .filter(s => {
+                    const serviceDate = new Date(s.date);
+                    return serviceDate >= thisMonth && serviceDate <= today;
+                })
+                .reduce((total, s) => total + (s.price || 0), 0);
+            
+            const totalRevenue = calculateTotalRevenue();
+            
+            // Calculate average daily revenue based on days with services
+            const serviceDays = new Set(serviceRecords.map(s => new Date(s.date).toDateString())).size;
+            const avgDailyRevenue = serviceDays > 0 ? Math.floor(totalRevenue / serviceDays) : 0;
+            
+            // Update revenue stats
+            document.getElementById('admin-today-revenue').textContent = todayRevenue.toLocaleString() + ' تومان';
+            document.getElementById('admin-month-revenue').textContent = monthRevenue.toLocaleString() + ' تومان';
+            document.getElementById('admin-avg-daily-revenue').textContent = avgDailyRevenue.toLocaleString() + ' تومان';
+            
+            // Calculate customer stats
+            const newCustomersThisMonth = customers.filter(c => new Date(c.createdAt) >= thisMonth).length;
+            const activeCustomers = customers.filter(c => (c.visits || 0) > 0).length;
+            const avgVisits = customers.length > 0 ? Math.floor(customers.reduce((total, c) => total + (c.visits || 0), 0) / customers.length) : 0;
+            
+            document.getElementById('admin-new-customers-month').textContent = newCustomersThisMonth;
+            document.getElementById('admin-active-customers').textContent = activeCustomers;
+            document.getElementById('admin-avg-visits').textContent = avgVisits;
+            
+            // Load top customers
+            loadAdminTopCustomers();
+        }
+
+        function loadAdminTopCustomers() {
+            const topCustomers = customers
+                .sort((a, b) => (b.visits || 0) - (a.visits || 0))
+                .slice(0, 5);
+            
+            const container = document.getElementById('admin-top-customers');
+            
+            if (topCustomers.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-4">هنوز داده‌ای موجود نیست</div>';
+                return;
+            }
+            
+            container.innerHTML = topCustomers.map((customer, index) => `
+                <div class="flex items-center justify-between p-4 bg-white bg-opacity-30 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full gradient-btn flex items-center justify-center text-white font-bold">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <div class="font-medium">${customer.name}</div>
+                            <div class="text-sm text-gray-600">${customer.visits || 0} جلسه</div>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <div class="font-bold">${(customer.balance || 0).toLocaleString()} تومان</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Loyalty functions
+        function loadAdminLoyalty() {
+            const loyaltyPercentage = localStorage.getItem('loyalty-percentage') || '5';
+            const referralCount = localStorage.getItem('referral-count') || '3';
+            
+            document.getElementById('admin-loyalty-percentage').value = loyaltyPercentage;
+            document.getElementById('admin-referral-count').value = referralCount;
+            
+            loadAdminActiveCampaigns();
+        }
+
+        function saveAdminLoyaltySettings() {
+            const loyaltyPercentage = document.getElementById('admin-loyalty-percentage').value;
+            const referralCount = document.getElementById('admin-referral-count').value;
+            
+            localStorage.setItem('loyalty-percentage', loyaltyPercentage);
+            localStorage.setItem('referral-count', referralCount);
+            
+            showNotification('تنظیمات وفاداری ذخیره شد! 💾', 'success');
+        }
+
+        function createAdminCampaign() {
+            const name = document.getElementById('admin-campaign-name').value.trim();
+            const discount = document.getElementById('admin-campaign-discount').value;
+            const expiry = document.getElementById('admin-campaign-expiry').value;
+            const description = document.getElementById('admin-campaign-description').value.trim();
+            
+            if (!name || !discount || !expiry) {
+                showNotification('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
+                return;
+            }
+            
+            const campaign = {
+                id: Date.now().toString(),
+                name,
+                discount: parseInt(discount),
+                expiry,
+                description,
+                createdAt: new Date().toISOString(),
+                active: true
+            };
+            
+            campaigns.push(campaign);
+            localStorage.setItem('nail-salon-campaigns', JSON.stringify(campaigns));
+            
+            // Clear form
+            document.getElementById('admin-campaign-name').value = '';
+            document.getElementById('admin-campaign-discount').value = '';
+            document.getElementById('admin-campaign-expiry').value = '';
+            document.getElementById('admin-campaign-description').value = '';
+            
+            loadAdminActiveCampaigns();
+            showNotification('کمپین جدید ایجاد شد! 🎯', 'success');
+        }
+
+        function loadAdminActiveCampaigns() {
+            const container = document.getElementById('admin-active-campaigns');
+            const activeCampaigns = campaigns.filter(c => c.active && new Date(c.expiry) > new Date());
+            
+            if (activeCampaigns.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-8">هنوز کمپینی ایجاد نشده است 🎁</div>';
+                return;
+            }
+            
+            container.innerHTML = activeCampaigns.map(campaign => `
+                <div class="customer-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">${campaign.name}</h4>
+                            <p class="text-sm text-gray-600">${campaign.discount}% تخفیف</p>
+                        </div>
+                        <div class="badge">${new Date(campaign.expiry).toLocaleDateString('fa-IR')}</div>
+                    </div>
+                    
+                    ${campaign.description ? `
+                        <p class="text-gray-700 mb-4">${campaign.description}</p>
+                    ` : ''}
+                    
+                    <div class="flex gap-2">
+                        <button onclick="sendAdminCampaignMessage('${campaign.id}')" class="gradient-btn text-white px-4 py-2 rounded-lg text-sm flex-1">
+                            📤 ارسال به همه
+                        </button>
+                        <button onclick="deactivateAdminCampaign('${campaign.id}')" class="bg-red-400 text-white px-4 py-2 rounded-lg text-sm">
+                            ❌ غیرفعال
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function sendAdminCampaignMessage(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (campaign) {
+                showNotification(`کمپین "${campaign.name}" برای ${customers.length} مشتری ارسال شد! 🎯`, 'success');
+            }
+        }
+
+        function deactivateAdminCampaign(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (campaign && confirm(`آیا مطمئن هستید که می‌خواهید کمپین "${campaign.name}" را غیرفعال کنید؟`)) {
+                campaign.active = false;
+                localStorage.setItem('nail-salon-campaigns', JSON.stringify(campaigns));
+                loadAdminActiveCampaigns();
+                showNotification('کمپین غیرفعال شد', 'success');
+            }
+        }
+
+        // Settings functions
+        function saveAdminSettings() {
+            const salonName = document.getElementById('admin-salon-name').value.trim();
+            const salonPhone = document.getElementById('admin-salon-phone').value.trim();
+            const salonAddress = document.getElementById('admin-salon-address').value.trim();
+            
+            settings.salonName = salonName;
+            settings.salonPhone = salonPhone;
+            settings.salonAddress = salonAddress;
+            
+            localStorage.setItem('nail-salon-settings', JSON.stringify(settings));
+            showNotification('تنظیمات ذخیره شد! ⚙️', 'success');
+        }
+
+        function backupData() {
+            const data = {
+                customers,
+                appointments,
+                settings,
+                campaigns,
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nail-salon-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('پشتیبان‌گیری انجام شد! 💾', 'success');
+        }
+
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            
+                            if (confirm('آیا مطمئن هستید که می‌خواهید داده‌های فعلی را با پشتیبان جایگزین کنید؟')) {
+                                customers = data.customers || [];
+                                appointments = data.appointments || [];
+                                settings = data.settings || {};
+                                campaigns = data.campaigns || [];
+                                
+                                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+                                localStorage.setItem('nail-salon-appointments', JSON.stringify(appointments));
+                                localStorage.setItem('nail-salon-settings', JSON.stringify(settings));
+                                localStorage.setItem('nail-salon-campaigns', JSON.stringify(campaigns));
+                                
+                                location.reload();
+                            }
+                        } catch (error) {
+                            showNotification('خطا در بازیابی داده‌ها', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ هشدار: این عمل تمام داده‌ها را پاک می‌کند و قابل بازگشت نیست. آیا مطمئن هستید؟')) {
+                if (confirm('آیا واقعاً مطمئن هستید؟ تمام مشتریان، نوبت‌ها و تنظیمات حذف خواهند شد!')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+        }
+
+        function exportData() {
+            const data = customers.map(customer => ({
+                'نام': customer.name,
+                'شماره تماس': customer.phone,
+                'تاریخ تولد': customer.birthday || '',
+                'تعداد مراجعات': customer.visits || 0,
+                'شارژ حساب': customer.balance || 0,
+                'وضعیت': getStatusText(customer.status)
+            }));
+            
+            const csv = convertToCSV(data);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `customers-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('فایل Excel ایجاد شد! 📊', 'success');
+        }
+
+        function convertToCSV(data) {
+            if (!data.length) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => `"${row[header]}"`).join(','))
+            ].join('\n');
+            
+            return '\uFEFF' + csvContent; // Add BOM for proper UTF-8 encoding
+        }
+
+        function showAddServiceModal() {
+            // Populate customer dropdown
+            const customerSelect = document.getElementById('service-customer-select');
+            customerSelect.innerHTML = '<option value="">انتخاب مشتری...</option>' + 
+                customers.map(customer => `<option value="${customer.id}">${customer.name} - ${customer.phone}</option>`).join('');
+            
+            document.getElementById('add-service-modal').classList.remove('hidden');
+            document.getElementById('add-service-modal').classList.add('flex');
+        }
+
+        function toggleCustomServiceType() {
+            const serviceType = document.getElementById('service-type-select').value;
+            const customTypeInput = document.getElementById('service-custom-type');
+            
+            if (serviceType === 'other') {
+                customTypeInput.classList.remove('hidden');
+            } else {
+                customTypeInput.classList.add('hidden');
+                customTypeInput.value = '';
+            }
+        }
+
+        function formatPersianDate(input) {
+            let value = input.value.replace(/[^\d]/g, '');
+            
+            if (value.length >= 4) {
+                value = value.substring(0, 4) + '/' + value.substring(4);
+            }
+            if (value.length >= 7) {
+                value = value.substring(0, 7) + '/' + value.substring(7);
+            }
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            
+            input.value = value;
+        }
+
+        function convertPersianToGregorian(persianDate, time) {
+            // Simple conversion - in real app you'd use a proper Persian calendar library
+            const parts = persianDate.split('/');
+            if (parts.length !== 3) return new Date();
+            
+            const persianYear = parseInt(parts[0]);
+            const persianMonth = parseInt(parts[1]);
+            const persianDay = parseInt(parts[2]);
+            
+            // Approximate conversion (for demo purposes)
+            const gregorianYear = persianYear + 621;
+            const gregorianMonth = persianMonth;
+            const gregorianDay = persianDay;
+            
+            const [hours, minutes] = time.split(':');
+            const date = new Date(gregorianYear, gregorianMonth - 1, gregorianDay, parseInt(hours), parseInt(minutes));
+            
+            return date;
+        }
+
+        function convertGregorianToPersian(gregorianDate) {
+            // Simple conversion - in real app you'd use a proper Persian calendar library
+            const year = gregorianDate.getFullYear() - 621;
+            const month = gregorianDate.getMonth() + 1;
+            const day = gregorianDate.getDate();
+            
+            return `${year}/${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
+        }
+
+        function addServiceRecord() {
+            const customerId = document.getElementById('service-customer-select').value;
+            const serviceType = document.getElementById('service-type-select').value;
+            const customServiceType = document.getElementById('service-custom-type').value.trim();
+            const price = document.getElementById('service-price').value;
+            const description = document.getElementById('service-description').value.trim();
+            
+            if (!customerId || !serviceType || !price || !description) {
+                showNotification('لطفاً تمام فیلدهای ضروری را پر کنید', 'error');
+                return;
+            }
+            
+            if (serviceType === 'other' && !customServiceType) {
+                showNotification('لطفاً نوع خدمت را مشخص کنید', 'error');
+                return;
+            }
+            
+            const serviceRecord = {
+                id: Date.now().toString(),
+                customerId,
+                serviceType,
+                customServiceType: serviceType === 'other' ? customServiceType : '',
+                price: parseInt(price),
+                description,
+                date: new Date().toISOString(),
+                createdAt: new Date().toISOString()
+            };
+            
+            serviceRecords.push(serviceRecord);
+            localStorage.setItem('nail-salon-service-records', JSON.stringify(serviceRecords));
+            
+            // Update customer stats
+            const customer = customers.find(c => c.id === customerId);
+            if (customer) {
+                customer.visits = (customer.visits || 0) + 1;
+                localStorage.setItem('nail-salon-customers', JSON.stringify(customers));
+            }
+            
+            // Clear form
+            document.getElementById('service-customer-select').value = '';
+            document.getElementById('service-type-select').value = 'manicure';
+            document.getElementById('service-custom-type').value = '';
+            document.getElementById('service-custom-type').classList.add('hidden');
+            document.getElementById('service-price').value = '';
+            document.getElementById('service-description').value = '';
+            
+            closeModal('add-service-modal');
+            loadAdminServices();
+            updateAdminStats();
+            showNotification('سابقه خدمت با موفقیت ثبت شد! 📋', 'success');
+        }
+
+        // Utility functions
+        function calculateTotalRevenue() {
+            // Calculate from service records (most accurate)
+            return serviceRecords.reduce((total, service) => {
+                return total + (service.price || 0);
+            }, 0);
+        }
+
+        function getTodayAppointments() {
+            const today = new Date().toDateString();
+            return appointments.filter(appointment => 
+                new Date(appointment.datetime).toDateString() === today
+            );
+        }
+
+        function getVIPCustomers() {
+            return customers.filter(customer => (customer.visits || 0) >= 10);
+        }
+
+
+
+        function getStatusText(status) {
+            const statusTexts = {
+                'new': 'جدید',
+                'loyal': 'وفادار',
+                'vip': 'VIP',
+                'pending': 'در انتظار',
+                'confirmed': 'تایید شده',
+                'completed': 'تکمیل شده',
+                'cancelled': 'لغو شده'
+            };
+            return statusTexts[status] || status;
+        }
+
+        function getServiceName(service) {
+            const serviceNames = {
+                'manicure': 'مانیکور',
+                'laminate': 'استحکام سازی ناخن طبیعی (لمینت)',
+                'initial-extension': 'کاشت اولیه',
+                'repair': 'ترمیم',
+                'colleague-repair': 'ترمیم همکار',
+                'gel-polish': 'ژل پلیش دست',
+                'shape-fix': 'اصلاح فرم و ناخن شکسته'
+            };
+            return serviceNames[service] || service;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-2xl text-white font-medium transform transition-all duration-300 translate-x-full ${
+                type === 'success' ? 'bg-gradient-to-r from-green-400 to-green-500' : 
+                type === 'error' ? 'bg-gradient-to-r from-red-400 to-red-500' : 
+                'bg-gradient-to-r from-blue-400 to-blue-500'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.add('hidden');
+                e.target.classList.remove('flex');
+            }
+        });
+
+        // Search functionality for admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('admin-customer-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    filterAdminCustomers(this.value);
+                });
+            }
+        });
+
+        function filterAdminCustomers(searchTerm) {
+            const filteredCustomers = customers.filter(customer => 
+                customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                customer.phone.includes(searchTerm)
+            );
+            
+            const container = document.getElementById('admin-customers-list');
+            
+            if (filteredCustomers.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">مشتری‌ای یافت نشد 🔍</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredCustomers.map(customer => `
+                <div class="customer-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full gradient-btn flex items-center justify-center text-white text-xl">
+                                ${customer.name.charAt(0)}
+                            </div>
+                            <div>
+                                <div class="font-bold text-gray-800">${customer.name}</div>
+                                <div class="text-sm text-gray-600">${customer.phone}</div>
+                            </div>
+                        </div>
+                        <div class="badge ${customer.status}">${getStatusText(customer.status)}</div>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>مراجعات:</span>
+                            <span class="font-medium">${customer.visits || 0} بار</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>شارژ:</span>
+                            <span class="font-medium">${(customer.balance || 0).toLocaleString()} تومان</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openCustomerPanel('${customer.id}')" class="gradient-btn text-white px-4 py-2 rounded-xl w-full">
+                        👤 مشاهده پنل مشتری
+                    </button>
+                </div>
+            `).join('');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f1658146fddcc2',t:'MTc2MDU1MzExOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
