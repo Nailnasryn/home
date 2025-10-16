@@ -155,6 +155,16 @@
 </head>
 <body>
 <style>
+#toast-container{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px}
+.toast{min-width:260px;max-width:90vw;padding:12px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);color:#0b1b23;background:#fff;display:flex;align-items:center;gap:10px;font-size:14px;opacity:0;transform:translateY(-8px);animation:toast-in .25s forwards}
+.toast.success{border-left:6px solid #22c55e}.toast.error{border-left:6px solid #ef4444}.toast.warn{border-left:6px solid #f59e0b}
+.toast .title{font-weight:700;margin-inline-end:6px}
+@keyframes toast-in{to{opacity:1;transform:translateY(0)}}
+@keyframes toast-out{to{opacity:0;transform:translateY(-6px)}}
+</style>
+<div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<style>
   #toast-container{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:8px}
   .toast{min-width:260px;max-width:90vw;padding:12px 16px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);color:#0b1b23;
     background:#fff;display:flex;align-items:center;gap:10px;font-size:14px;opacity:0;transform:translateY(-8px);animation:toast-in .25s forwards}
@@ -4094,6 +4104,238 @@ async function saveAdminSettings() {
 
   // Expose for debugging
   window.fb = { db, auth, fbFindCustomerByPhone, fbAddCustomer, fbAddAppointment, fbCancelAppointment, fbSaveSettings, fbReadSettings };
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import { setLogLevel, initializeFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+           query, where, onSnapshot, updateDoc, serverTimestamp, orderBy, increment }
+         from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+         from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  // ===== Firebase config (from you) =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYf7X33Cof8IM0uH0Set8Ev1EfAIE4SJ8",
+    authDomain: "nasrynnail-crm-f6f80.firebaseapp.com",
+    projectId: "nasrynnail-crm-f6f80",
+    storageBucket: "nasrynnail-crm-f6f80.appspot.com",
+    messagingSenderId: "398579445205",
+    appId: "1:398579445205:web:185295d6c9296f4c9ca15c"
+  };
+
+  // ===== Init =====
+  const app = initializeApp(firebaseConfig);
+  const db  = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+    experimentalLongPollingOptions: { timeoutSeconds: 30 },
+    useFetchStreams: false
+  });
+  setLogLevel('silent');
+  const auth = getAuth(app);
+
+  // ===== Toast =====
+  function showToast(message, type='info'){
+    const box = document.getElementById('toast-container');
+    const el = document.createElement('div');
+    el.className = 'toast ' + (type==='success'?'success':type==='error'?'error':type==='warn'?'warn':'');
+    el.innerHTML = '<span class="title">'+(type==='success'?'موفق':type==='error'?'خطا':type==='warn'?'هشدار':'پیام')+'</span> ' + message;
+    box.appendChild(el);
+    const t = setTimeout(()=>{ el.style.animation='toast-out .2s forwards'; setTimeout(()=>el.remove(),180); clearTimeout(t); }, 3000);
+  }
+  window.showNotification = (msg,t)=>showToast(msg,t);
+
+  // ===== Firestore helpers =====
+  async function fbFindCustomerByPhone(phone){
+    const qy = query(collection(db,'customers'), where('phone','==', phone));
+    const s = await getDocs(qy);
+    if(s.empty) return null;
+    const d = s.docs[0];
+    return { id: d.id, ...d.data() };
+  }
+
+  async function fbAddCustomer({name, phone, birthday}){
+    if (await fbFindCustomerByPhone(phone)) throw new Error('این شماره قبلاً ثبت شده است.');
+    const ref = await addDoc(collection(db,'customers'), {
+      name, phone, birthday: birthday || null,
+      visits: 0, balance: 30000, createdAt: serverTimestamp()
+    });
+    const snap = await getDoc(ref);
+    return { id: ref.id, ...snap.data() };
+  }
+
+  async function fbAddAppointment(appt){
+    await addDoc(collection(db,'appointments'), { ...appt, createdAt: serverTimestamp() });
+  }
+
+  async function fbCancelAppointment(apptId, {reason, suggestedDate, suggestedTime}={}){
+    const updates = { status: 'cancelled' };
+    if (reason) updates.cancelReason = reason;
+    if (suggestedDate) updates.suggestedDate = suggestedDate;
+    if (suggestedTime) updates.suggestedTime = suggestedTime;
+    await updateDoc(doc(db,'appointments', apptId), updates);
+  }
+
+  async function fbAddServiceRecord({ customerId, serviceType, customServiceType, price, description, cashback, date }){
+    await addDoc(collection(db,'serviceRecords'), {
+      customerId, serviceType,
+      customServiceType: customServiceType || null,
+      price: Number(price),
+      description: description || '',
+      cashback: Number(cashback || 0),
+      date: date || new Date().toISOString(),
+      createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db,'customers', customerId), {
+      balance: increment(Number(cashback || 0)),
+      visits: increment(1)
+    });
+  }
+
+  async function fbSaveSettings(settingsObj){
+    await setDoc(doc(db,'settings','main'), { ...settingsObj, updatedAt: serverTimestamp() });
+  }
+  async function fbReadSettings(){
+    const s = await getDoc(doc(db,'settings','main'));
+    return s.exists() ? s.data() : {};
+  }
+
+  async function fbAdminLogin(email, password){
+    await signInWithEmailAndPassword(auth, email, password);
+    return auth.currentUser;
+  }
+  async function fbAdminLogout(){ try{ await signOut(auth); }catch(e){} }
+
+  // ===== Realtime for Admin =====
+  let _unsubCustomers=null;
+  function watchAdminCustomers(){
+    if (_unsubCustomers) return;
+    const qy = query(collection(db,'customers'), orderBy('createdAt','desc'));
+    _unsubCustomers = onSnapshot(qy, (snap)=>{
+      window.customers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      window.loadAdminCustomers?.();
+      window.updateAdminStats?.();
+    }, (err)=> console.error('customers onSnapshot error:', err));
+  }
+
+  // ===== UI bindings (IDs fallback-friendly) =====
+  function byId(id){ return document.getElementById(id); }
+
+  window.customerRegister = async function(){
+    const name = byId('customer-register-name')?.value?.trim()
+              || byId('cust-name')?.value?.trim()
+              || byId('name')?.value?.trim();
+    const phone = byId('customer-register-phone')?.value?.trim()
+               || byId('cust-phone')?.value?.trim()
+               || byId('phone')?.value?.trim();
+    const birthday = byId('customer-register-birthday')?.value?.trim()
+                  || byId('cust-birthday')?.value?.trim()
+                  || byId('birthday')?.value?.trim();
+    if(!name || !phone){ showToast('نام و شماره تماس الزامی است','error'); return; }
+    try{
+      const c = await fbAddCustomer({ name, phone, birthday });
+      window.currentUser = c; window.userType='customer';
+      window.showCustomerPanel?.();
+      window.loadCustomerProfile?.();
+      window.loadCustomerAppointments?.();
+      window.loadCustomerRecentAppointments?.();
+      window.loadCustomerCampaigns?.();
+      window.loadCustomerServiceHistory?.();
+      showToast('ثبت‌نام با موفقیت انجام شد 🌸','success');
+    }catch(e){ console.error(e); showToast(e.message || 'خطا در ثبت‌نام','error'); }
+  };
+
+  window.customerLogin = async function(){
+    const phone = byId('customer-login-phone')?.value?.trim()
+               || byId('login-phone')?.value?.trim()
+               || byId('phone')?.value?.trim();
+    if(!phone){ showToast('شماره تماس را وارد کنید','error'); return; }
+    try{
+      const c = await fbFindCustomerByPhone(phone);
+      if(!c){ showToast('مشتری با این شماره یافت نشد؛ لطفاً ابتدا ثبت‌نام کنید.','warn'); return; }
+      window.currentUser = c; window.userType='customer';
+      window.showCustomerPanel?.();
+      window.loadCustomerProfile?.();
+      window.loadCustomerAppointments?.();
+      window.loadCustomerRecentAppointments?.();
+      window.loadCustomerCampaigns?.();
+      window.loadCustomerServiceHistory?.();
+      showToast('ورود موفق 🌟','success');
+    }catch(e){ console.error(e); showToast('خطای ورود','error'); }
+  };
+
+  window.adminLogin = async function(){
+    const email = byId('admin-username')?.value?.trim() || byId('admin-email')?.value?.trim();
+    const password = byId('admin-password')?.value?.trim() || byId('password')?.value?.trim();
+    try{
+      await fbAdminLogin(email, password);
+      window.userType='admin';
+      watchAdminCustomers();
+      window.showAdminPanel?.();
+      showToast('ورود موفق به پنل مدیریت ⚙️','success');
+    }catch(e){ console.error(e); showToast('نام کاربری یا رمز عبور اشتباه است','error'); }
+  };
+
+  window.logout = async function(){
+    await fbAdminLogout();
+    window.currentUser=null; window.userType=null;
+    window.showAuthScreen?.();
+    ['customer-login-phone','customer-register-name','customer-register-phone','customer-register-birthday','admin-username','admin-password','admin-email','password']
+      .forEach(id=>{ const el=byId(id); if(el) el.value=''; });
+    showToast('خروج موفق 👋','success');
+  };
+
+  window.bookAppointment = async function(){
+    if(!window.currentUser){ showToast('ابتدا وارد شوید','error'); return; }
+    const date = byId('book-appointment-date')?.value;
+    const time = byId('book-appointment-time')?.value;
+    const service = byId('book-appointment-service')?.value;
+    const notes = byId('book-appointment-notes')?.value?.trim();
+    const additionalServices = [];
+    if(byId('additional-french')?.checked) additionalServices.push('french');
+    if(byId('additional-ombre')?.checked) additionalServices.push('ombre');
+    if(byId('additional-galaxy')?.checked) additionalServices.push('galaxy-gel');
+    if(byId('additional-lens')?.checked) additionalServices.push('lens-chrome');
+    if(!date || !time){ showToast('تاریخ و ساعت را وارد کنید','error'); return; }
+    const appt = {
+      id: crypto.randomUUID(),
+      customerId: window.currentUser.id,
+      service, additionalServices, notes,
+      status: 'pending',
+      datetime: new Date().toISOString(),
+      persianDate: date, persianTime: time,
+      createdAt: new Date().toISOString()
+    };
+    try{ await fbAddAppointment(appt); window.closeModal?.('book-appointment-modal'); showToast('نوبت ثبت شد ✅','success'); }
+    catch(e){ console.error(e); showToast('خطا در ثبت نوبت','error'); }
+  };
+
+  window.cancelCustomerAppointment = function(apptId){ window._cancelApptId=apptId; window.openModal?.('cancel-appointment-modal'); };
+  window.confirmCancelAppointment = async function(){
+    const reason = byId('cancel-reason')?.value?.trim();
+    const suggestedDate = byId('suggested-date')?.value;
+    const suggestedTime = byId('suggested-time')?.value;
+    if(!window._cancelApptId) return;
+    try{ await fbCancelAppointment(window._cancelApptId, {reason, suggestedDate, suggestedTime});
+      window.closeModal?.('cancel-appointment-modal'); showToast('نوبت لغو شد ❌','success'); }
+    catch(e){ console.error(e); showToast('خطا در لغو نوبت','error'); }
+    finally{ window._cancelApptId=null; }
+  };
+
+  // Try to auto-bind common buttons if they exist
+  const bindings = [
+    ['customer-register-btn', 'click', window.customerRegister],
+    ['customer-login-btn',    'click', window.customerLogin],
+    ['admin-login-btn',       'click', window.adminLogin],
+  ];
+  bindings.forEach(([id, ev, fn])=>{ const el = document.getElementById(id); if(el && fn) el.addEventListener(ev, fn); });
+
+  // Keep admin realtime after refresh
+  onAuthStateChanged(auth, (user)=>{ if(user && window.userType==='admin'){ watchAdminCustomers(); window.showAdminPanel?.(); } });
+
+  // Debug handle
+  window.fb = { db, auth, findCustomerByPhone: fbFindCustomerByPhone, addCustomer: fbAddCustomer, addAppointment: fbAddAppointment,
+                cancelAppointment: fbCancelAppointment, saveSettings: fbSaveSettings, readSettings: fbReadSettings };
 </script>
 </body>
 </html>
