@@ -3843,6 +3843,29 @@ async function saveAdminSettings() {
     showNotification('خطا در ذخیره تنظیمات', 'error');
   }
 }
+  // فرم تنظیمات را از Firestore پر کن
+  function loadSettingsForm() {
+    const s = window.settings || {};
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = (val ?? ''); };
+    set('admin-salon-name',  s.salonName);
+    set('admin-salon-phone', s.salonPhone);
+    set('admin-salon-address', s.salonAddress);
+    loadAdminLoyalty(); // همزمان وفاداری را هم سینک کن
+  }
+
+  // جایگزینِ امن برای loadAdminLoyalty (با فیلدهای موجود در UI)
+  async function loadAdminLoyalty() {
+    try {
+      const s = window.settings || await window.fb.readSettings();
+      const loyalty = document.getElementById('admin-loyalty-percentage');
+      const referral = document.getElementById('admin-referral-count');
+      if (loyalty)  loyalty.value  = (s.loyaltyPercent ?? 5);
+      if (referral) referral.value = (s.referralCount ?? 3);
+    } catch (e) {
+      console.error('loadAdminLoyalty error', e);
+    }
+  }
 </script>
 </body>
 </html>
+
