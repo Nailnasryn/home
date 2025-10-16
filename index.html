@@ -1033,11 +1033,11 @@
 
     <script>
         // Data Storage
-        let customers = JSON.parse(localStorage.getItem('nail-salon-customers') || '[]');
-        let appointments = JSON.parse(localStorage.getItem('nail-salon-appointments') || '[]');
-        let settings = JSON.parse(localStorage.getItem('nail-salon-settings') || '{}');
-        let campaigns = JSON.parse(localStorage.getItem('nail-salon-campaigns') || '[]');
-        let serviceRecords = JSON.parse(localStorage.getItem('nail-salon-service-records') || '[]');
+        let customers = [];
+        let appointments = [];
+        let settings = {};
+        let campaigns = [];
+        let serviceRecords = [];
         let currentUser = null;
         let userType = null; // 'customer' or 'admin'
 
@@ -3515,6 +3515,331 @@ async function saveAdminSettings() {
     await window.fb.saveSettings(obj);
     showNotification('تنظیمات ذخیره شد ✅', 'success');
   } catch(e) {
+    showNotification('خطا در ذخیره تنظیمات', 'error');
+  }
+}
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+  import {
+    getFirestore, collection, doc, addDoc, setDoc, getDoc, getDocs,
+    query, where, onSnapshot, updateDoc, serverTimestamp, orderBy, increment
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+  // === Firebase config: Nasryn Nail CRM ===
+  const firebaseConfig = {
+    apiKey: "AIzaSyBYf7X33Cof8IM0uH0set8Ev1EfAIE4SJ8",
+    authDomain: "nasrynnail-crm-f6f80.firebaseapp.com",
+    projectId: "nasrynnail-crm-f6f80",
+    storageBucket: "nasrynnail-crm-f6f80.firebasestorage.app",
+    messagingSenderId: "398579445205",
+    appId: "1:398579445205:web:185295d6c9296f4c9ca15c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  const auth = getAuth(app);
+
+  // ---- Helpers ----
+  async function fbFindCustomerByPhone(phone) {
+    const q = query(collection(db, "customers"), where("phone", "==", phone));
+    const s = await getDocs(q);
+    if (s.empty) return null;
+    const d = s.docs[0]; return { id: d.id, ...d.data() };
+  }
+
+  async function fbAddCustomer({name, phone, birthday}) {
+    if (await fbFindCustomerByPhone(phone)) throw new Error("این شماره قبلاً ثبت شده است.");
+    const ref = await addDoc(collection(db, "customers"), {
+      name, phone, birthday: birthday || null,
+      visits: 0, balance: 30000, createdAt: serverTimestamp()
+    });
+    const snap = await getDoc(ref);
+    return { id: ref.id, ...snap.data() };
+  }
+
+  async function fbAddAppointment(appt) {
+    await addDoc(collection(db, "appointments"), { ...appt, createdAt: serverTimestamp() });
+  }
+
+  async function fbCancelAppointment(apptId, {reason, suggestedDate, suggestedTime} = {}) {
+    const updates = { status: "cancelled" };
+    if (reason) updates.cancelReason = reason;
+    if (suggestedDate) updates.suggestedDate = suggestedDate;
+    if (suggestedTime) updates.suggestedTime = suggestedTime;
+    await updateDoc(doc(db, "appointments", apptId), updates);
+  }
+
+  async function fbAddServiceRecord({ customerId, serviceType, customServiceType, price, description, cashback, date }) {
+    await addDoc(collection(db, "serviceRecords"), {
+      customerId, serviceType, customServiceType: customServiceType || null,
+      price: Number(price), description: description || "", cashback: Number(cashback || 0),
+      date, createdAt: serverTimestamp()
+    });
+    await updateDoc(doc(db, "customers", customerId), {
+      balance: increment(Number(cashback || 0)),
+      visits: increment(1)
+    });
+  }
+
+  async function fbSaveSettings(settingsObj) {
+    await setDoc(doc(db, "settings", "main"), { ...settingsObj, updatedAt: serverTimestamp() });
+  }
+
+  async function fbReadSettings() {
+    const s = await getDoc(doc(db, "settings", "main"));
+    return s.exists() ? s.data() : {};
+  }
+
+  async function fbAdminLogin(email, password) {
+    await signInWithEmailAndPassword(auth, email, password);
+    return auth.currentUser;
+  }
+  async function fbAdminLogout() { await signOut(auth); }
+
+  // ---- Realtime listeners ----
+  // Public reads (allowed by Rules): customers, appointments, campaigns, settings
+  const unsubCustomers = onSnapshot(query(collection(db, "customers"), orderBy("createdAt","desc")), (snap) => {
+    window.customers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.loadAdminCustomers?.();
+    if (window.userType === 'customer' && window.currentUser) {
+      const me = window.customers.find(c => c.id === window.currentUser.id || c.phone === window.currentUser.phone);
+      if (me) { window.currentUser = { ...me }; window.loadCustomerProfile?.(); }
+    }
+    window.updateAdminStats?.();
+  });
+
+  const unsubAppointments = onSnapshot(query(collection(db, "appointments"), orderBy("datetime","desc")), (snap) => {
+    window.appointments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.loadCustomerAppointments?.();
+    window.loadCustomerRecentAppointments?.();
+    window.loadAdminAppointments?.();
+    window.updateAdminStats?.();
+  });
+
+  const unsubCampaigns = onSnapshot(collection(db, "campaigns"), (snap) => {
+    window.campaigns = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    window.loadCustomerCampaigns?.();
+    window.loadAdminCampaigns?.();
+  });
+
+  const unsubSettings = onSnapshot(doc(db, "settings", "main"), (snap) => {
+    window.settings = snap.exists() ? snap.data() : {};
+    window.loadSettingsForm?.();
+  });
+
+  // Admin-only listener (serviceRecords) to satisfy current Rules
+  let _adminUnsubSR = null;
+  function startAdminServiceRecords() {
+    if (_adminUnsubSR) return;
+    _adminUnsubSR = onSnapshot(collection(db, "serviceRecords"), (snap) => {
+      window.serviceRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      window.loadCustomerServiceHistory?.();
+      window.loadAdminServices?.();
+      window.updateAdminStats?.();
+    });
+  }
+  function stopAdminServiceRecords() {
+    if (_adminUnsubSR) { _adminUnsubSR(); _adminUnsubSR = null; }
+    window.serviceRecords = [];
+  }
+
+  // Expose
+  window.fb = {
+    db, auth,
+    findCustomerByPhone: fbFindCustomerByPhone,
+    addCustomer: fbAddCustomer,
+    addAppointment: fbAddAppointment,
+    cancelAppointment: fbCancelAppointment,
+    addServiceRecord: fbAddServiceRecord,
+    saveSettings: fbSaveSettings,
+    readSettings: fbReadSettings,
+    adminLogin: fbAdminLogin,
+    adminLogout: fbAdminLogout,
+    startAdminServiceRecords, stopAdminServiceRecords
+  };
+
+  // Keep UI in sync with auth for admin
+  onAuthStateChanged(auth, (user) => {
+    if (user && window.userType === 'admin') {
+      startAdminServiceRecords();
+      window.showAdminPanel?.();
+    } else {
+      stopAdminServiceRecords();
+    }
+  });
+</script>
+
+<script>
+function showNotification(msg, type='info'){ try{ 
+  // Simple fallback toast
+  console.log(type.toUpperCase()+':', msg);
+} catch(e){} }
+
+// --- Customer login by phone ---
+function customerLogin() {
+  const phone = document.getElementById('customer-login-phone').value.trim();
+  if (!phone) { showNotification('لطفاً شماره تماس را وارد کنید', 'error'); return; }
+  (async () => {
+    const customer = await window.fb.findCustomerByPhone(phone);
+    if (!customer) { showNotification('مشتری با این شماره یافت نشد. لطفاً ابتدا ثبت‌نام کنید', 'error'); return; }
+    window.currentUser = customer;
+    window.userType = 'customer';
+    showCustomerPanel();
+    loadCustomerProfile?.();
+    loadCustomerAppointments?.();
+    loadCustomerRecentAppointments?.();
+    loadCustomerCampaigns?.();
+    loadCustomerServiceHistory?.();
+    showNotification(`خوش آمدید ${customer.name}! 🌸`, 'success');
+  })().catch(e => showNotification(e.message || 'خطای ورود', 'error'));
+}
+
+// --- Customer register ---
+function customerRegister() {
+  const name = document.getElementById('customer-register-name').value.trim();
+  const phone = document.getElementById('customer-register-phone').value.trim();
+  const birthday = document.getElementById('customer-register-birthday').value;
+  if (!name || !phone) { showNotification('لطفاً نام و شماره تماس را وارد کنید', 'error'); return; }
+  (async () => {
+    const newCustomer = await window.fb.addCustomer({ name, phone, birthday });
+    window.currentUser = newCustomer;
+    window.userType = 'customer';
+    showCustomerPanel();
+    showNotification(`ثبت‌نام موفق! خوش آمدید ${newCustomer.name}! 🎉 حساب شما با ۳۰ هزار تومان شارژ شد! 💰`, 'success');
+  })().catch(e => showNotification(e.message || 'خطا در ثبت‌نام', 'error'));
+}
+
+// --- Admin login via Firebase Auth ---
+function adminLogin() {
+  const email = document.getElementById('admin-username').value.trim();
+  const password = document.getElementById('admin-password').value.trim();
+  (async () => {
+    await window.fb.adminLogin(email, password);
+    window.userType = 'admin';
+    window.fb.startAdminServiceRecords();
+    showAdminPanel();
+    showNotification('ورود موفق به پنل مدیریت! ⚙️', 'success');
+  })().catch((e) => {
+    console.error(e);
+    showNotification('نام کاربری یا رمز عبور اشتباه است', 'error');
+  });
+}
+
+// --- Logout (also signs out admin) ---
+async function logout() {
+  try { await window.fb.adminLogout?.(); } catch(e) {}
+  currentUser = null;
+  userType = null;
+  showAuthScreen();
+  document.getElementById('customer-login-phone').value = '';
+  document.getElementById('customer-register-name').value = '';
+  document.getElementById('customer-register-phone').value = '';
+  document.getElementById('customer-register-birthday').value = '';
+  document.getElementById('admin-username').value = '';
+  document.getElementById('admin-password').value = '';
+  showNotification('خروج موفق! 👋', 'success');
+}
+
+// --- Book appointment ---
+async function bookAppointment() {
+  if (!window.currentUser) { showNotification('ابتدا وارد شوید', 'error'); return; }
+  const date = document.getElementById('book-appointment-date').value;
+  const time = document.getElementById('book-appointment-time').value;
+  const service = document.getElementById('book-appointment-service').value;
+  const notes = document.getElementById('book-appointment-notes').value.trim();
+
+  const additionalServices = [];
+  if (document.getElementById('additional-french')?.checked) additionalServices.push('french');
+  if (document.getElementById('additional-ombre')?.checked) additionalServices.push('ombre');
+  if (document.getElementById('additional-galaxy')?.checked) additionalServices.push('galaxy-gel');
+  if (document.getElementById('additional-lens')?.checked) additionalServices.push('lens-chrome');
+
+  if (!date || !time) { showNotification('تاریخ و ساعت را وارد کنید', 'error'); return; }
+
+  const appointment = {
+    id: crypto.randomUUID(),
+    customerId: window.currentUser.id,
+    service, additionalServices, notes,
+    status: 'pending',
+    datetime: new Date().toISOString(),
+    persianDate: date,
+    persianTime: time,
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    await window.fb.addAppointment(appointment);
+    closeModal?.('book-appointment-modal');
+    showNotification('نوبت با موفقیت ثبت شد ✅', 'success');
+  } catch (e) {
+    console.error(e);
+    showNotification('خطا در ثبت نوبت', 'error');
+  }
+}
+
+// --- Cancel appointment (customer) ---
+function cancelCustomerAppointment(apptId) {
+  window._cancelApptId = apptId;
+  openModal?.('cancel-appointment-modal');
+}
+async function confirmCancelAppointment() {
+  const reason = document.getElementById('cancel-reason').value.trim();
+  const suggestedDate = document.getElementById('suggested-date').value;
+  const suggestedTime = document.getElementById('suggested-time').value;
+  if (!window._cancelApptId) return;
+  try {
+    await window.fb.cancelAppointment(window._cancelApptId, {reason, suggestedDate, suggestedTime});
+    closeModal?.('cancel-appointment-modal');
+    showNotification('نوبت لغو شد ❌', 'success');
+  } catch (e) {
+    console.error(e);
+    showNotification('خطا در لغو نوبت', 'error');
+  } finally {
+    window._cancelApptId = null;
+  }
+}
+
+// --- Add service record (admin) ---
+async function addServiceRecord() {
+  const customerId = document.getElementById('service-customer-select').value;
+  const serviceType = document.getElementById('service-type-select').value;
+  const customServiceType = document.getElementById('service-custom-type').value.trim();
+  const price = parseInt(document.getElementById('service-price').value || '0', 10);
+  const description = document.getElementById('service-description').value.trim();
+  if (!customerId || !serviceType || !price) { showNotification('اطلاعات خدمت ناقص است', 'error'); return; }
+  const cashbackPercent = parseInt(localStorage.getItem('base-cashback') || '5', 10);
+  const cashback = Math.floor((price * cashbackPercent) / 100);
+  try {
+    await window.fb.addServiceRecord({
+      customerId, serviceType, customServiceType,
+      price, description, cashback, date: new Date().toISOString()
+    });
+    closeModal?.('add-service-modal');
+    showNotification('ثبت خدمت انجام شد 💅✅', 'success');
+  } catch(e) {
+    console.error(e);
+    showNotification('خطا در ثبت خدمت', 'error');
+  }
+}
+
+// --- Save settings ---
+async function saveAdminSettings() {
+  const salonName = document.getElementById('admin-salon-name').value.trim();
+  const salonPhone = document.getElementById('admin-salon-phone').value.trim();
+  const salonAddress = document.getElementById('admin-salon-address').value.trim();
+  const loyaltyPercent = parseInt(document.getElementById('admin-loyalty-percentage')?.value || '5', 10);
+  const referralCount = parseInt(document.getElementById('admin-referral-count')?.value || '3', 10);
+  const obj = { salonName, salonPhone, salonAddress, loyaltyPercent, referralCount };
+  try {
+    await window.fb.saveSettings(obj);
+    showNotification('تنظیمات ذخیره شد ✅', 'success');
+  } catch(e) {
+    console.error(e);
     showNotification('خطا در ذخیره تنظیمات', 'error');
   }
 }
